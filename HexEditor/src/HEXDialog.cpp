@@ -2220,8 +2220,8 @@ void HexEdit::Delete(void)
 	/* get horizontal and vertical gap size */
 	if (_pCurProp->selection == HEX_SEL_BLOCK)
 	{
-		count = abs(_pCurProp->anchorPos  - _pCurProp->cursorPos);
-		lines = abs(_pCurProp->anchorItem - _pCurProp->cursorItem);
+		count = abs(INT(_pCurProp->anchorPos  - _pCurProp->cursorPos));
+		lines = abs(INT(_pCurProp->anchorItem - _pCurProp->cursorItem));
 	}
 	else
 	{
