@@ -88,6 +88,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
                        DWORD  reasonForCall, 
                        LPVOID lpReserved )
 {
+	UNREFERENCED_PARAMETER(lpReserved);
 	g_hModule = hModule;
 
     switch (reasonForCall)
@@ -150,7 +151,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 			if (g_TBHex.hToolbarIcon)
 				::DestroyIcon(g_TBHex.hToolbarIcon);
 
-			/* Remove subclaasing */
+			/* Remove subclassing */
 			SetWindowLongPtr(nppData._nppHandle, GWL_WNDPROC, (LONG)wndProcNotepad);
 			break;
 		}
@@ -299,6 +300,8 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
  */
 extern "C" __declspec(dllexport) LRESULT messageProc(UINT Message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
 	if (Message == WM_CREATE)
 	{
 		setMenu();

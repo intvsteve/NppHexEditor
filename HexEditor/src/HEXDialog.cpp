@@ -1011,6 +1011,7 @@ void HexEdit::MoveView(void)
 
 void HexEdit::UpdateHeader(BOOL isFirstTime)
 {
+	UNREFERENCED_PARAMETER(isFirstTime);
 	if (_pCurProp == NULL)
 		return;
 
@@ -2351,6 +2352,7 @@ void HexEdit::SelectItem(UINT iItem, UINT iSubItem, INT iCursor)
 void HexEdit::OnMouseClickItem(WPARAM wParam, LPARAM lParam)
 {
 	LV_HITTESTINFO	info;
+	UNREFERENCED_PARAMETER(wParam);
 
 	/* get selected sub item */
 	info.pt.x = LOWORD(lParam);
@@ -2523,6 +2525,7 @@ BOOL HexEdit::OnCharItem(WPARAM wParam, LPARAM lParam)
 	DWORD	start	= 0;
 	DWORD	end		= 0;
 	BOOL	newLine	= FALSE;
+	UNREFERENCED_PARAMETER(lParam);
 
 	if (_pCurProp->isBin == FALSE) {
 		if (((wParam < 0x30) || (wParam > 0x66)) ||
@@ -2969,6 +2972,7 @@ void HexEdit::SelectDump(INT iItem, INT iCursor)
 void HexEdit::OnMouseClickDump(WPARAM wParam, LPARAM lParam)
 {
 	LV_HITTESTINFO	info;
+	UNREFERENCED_PARAMETER(wParam);
 
 	/* get selected sub item */
 	info.pt.x = LOWORD(lParam);
@@ -3441,6 +3445,7 @@ BOOL HexEdit::GlobalKeys(WPARAM wParam, LPARAM lParam)
 	INT		posEnd;
 	bool	isShift   = ((0x80 & ::GetKeyState(VK_SHIFT)) == 0x80);
 	eSel	selection = ((0x80 & ::GetKeyState(VK_MENU)) == 0x80 ? HEX_SEL_BLOCK:HEX_SEL_NORM);
+	UNREFERENCED_PARAMETER(lParam);
 
 	switch (wParam)
 	{
@@ -3594,6 +3599,7 @@ void HexEdit::SelectionKeys(WPARAM wParam, LPARAM lParam)
 	bool	isMenu  = ((0x80 & ::GetKeyState(VK_MENU)) == 0x80);
 	bool	isCtrl  = ((0x80 & ::GetKeyState(VK_CONTROL)) == 0x80);
 	eSel	selection = (isMenu ? HEX_SEL_BLOCK:HEX_SEL_NORM);
+	UNREFERENCED_PARAMETER(lParam);
 
 	switch (wParam)
 	{

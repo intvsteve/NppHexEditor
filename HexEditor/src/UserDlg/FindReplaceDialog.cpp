@@ -68,6 +68,7 @@ void FindReplaceDlg::display(bool toShow)
 
 BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(hwnd);
 	switch (Message) 
 	{
         case WM_INITDIALOG :

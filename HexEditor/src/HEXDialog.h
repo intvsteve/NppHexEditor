@@ -441,6 +441,10 @@ private:
 
 	void runCursor(HWND hwnd, UINT Message, WPARAM wParam, unsigned long lParam)
 	{
+		UNREFERENCED_PARAMETER(hwnd);
+		UNREFERENCED_PARAMETER(Message);
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
 		if (_pCurProp != NULL)
 		{
 			_isCurOn ^= TRUE;

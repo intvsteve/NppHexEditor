@@ -42,18 +42,20 @@ typedef enum {
 static int CALLBACK EnumFontFamExProc(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, DWORD FontType, LPARAM lParam)
 {
 	vector<string> *pvStrFont = (vector<string> *)lParam;
-    size_t vectSize = pvStrFont->size();
-    if (vectSize == 0)
+	size_t vectSize = pvStrFont->size();
+	UNREFERENCED_PARAMETER(lpntme);
+	UNREFERENCED_PARAMETER(FontType);
+	if (vectSize == 0)
 		pvStrFont->push_back((LPTSTR)lpelfe->elfFullName);
-    else
-    {
+	else
+	{
 		if(lpelfe->elfLogFont.lfPitchAndFamily & FIXED_PITCH)
 		{
 			LPCTSTR lastFontName = pvStrFont->at(vectSize - 1).c_str();
 			if (_tcscmp(lastFontName, (LPCTSTR)lpelfe->elfFullName))
 				pvStrFont->push_back((LPTSTR)lpelfe->elfFullName);
 		}
-    } 
+	}
 	return 1;
 };
 
@@ -67,6 +69,7 @@ UINT OptionDlg::doDialog(tProp *prop)
 
 BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(hwnd);
 	switch (Message) 
 	{
 		case WM_INITDIALOG:
