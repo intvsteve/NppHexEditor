@@ -223,7 +223,7 @@ BOOL MultiTypeCombo::setComboText(tEncComboInfo info, UINT message)
 	if (_currDataType == HEX_CODE_UNI)
 	{
 		/* if string not exists in combo, add to it */
-		if (CB_ERR == ::SendMessageW(_hCombo, CB_FINDSTRINGEXACT, -1, (LPARAM)info.tNpp.text))
+		if (CB_ERR == ::SendMessageW(_hCombo, CB_FINDSTRINGEXACT, WPARAM(-1), (LPARAM)info.tNpp.text))
 			::SendMessageW(_hCombo, message, 0, (LPARAM)info.tNpp.text);
 		else
 			isAdd = FALSE;
@@ -253,9 +253,9 @@ void MultiTypeCombo::selectComboText(tEncComboInfo info)
 
 	encode(&info, _currDataType);
 	if (_currDataType == HEX_CODE_UNI) {
-		lResult = ::SendMessageW(_hCombo, CB_FINDSTRINGEXACT, -1, (LPARAM)info.tNpp.text);
+		lResult = ::SendMessageW(_hCombo, CB_FINDSTRINGEXACT, WPARAM(-1), (LPARAM)info.tNpp.text);
 	} else {
-		lResult = ::SendMessageA(_hCombo, CB_FINDSTRINGEXACT, -1, (LPARAM)info.tNpp.text);
+		lResult = ::SendMessageA(_hCombo, CB_FINDSTRINGEXACT, WPARAM(-1), (LPARAM)info.tNpp.text);
 	}
 	::SendMessage(_hCombo, CB_SETCURSEL, lResult, 0);
 }
