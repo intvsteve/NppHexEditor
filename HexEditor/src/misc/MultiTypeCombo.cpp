@@ -334,12 +334,12 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 					ptr = strtok_s(NULL, " ", &context);
 				}
 
-				/* if sting is odd -> return */
+				/* if string is odd -> return */
 				length = (INT)strlen(temp);
 				if (length & 0x1)
 				{
 					HWND hWnd = ::GetActiveWindow();
-					if (NLMessageBox(_hInst, _hNpp, _T("MsgBox OddDigits"), MB_ICONWARNING | MB_OK) == FALSE)
+					if (NLMessageBox(_hInst, _hNpp, _T("MsgBox OddDigits"), MB_ICONWARNING | MB_OK, hWnd) == FALSE)
 						::MessageBox(_hNpp, _T("There are odd digits. The data will be truncated!"), _T("Hex-Editor"), MB_ICONWARNING | MB_OK);
 					length--;
 				}
