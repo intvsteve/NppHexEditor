@@ -486,6 +486,7 @@ void FindReplaceDlg::onReplace(void)
 	INT		posBeg  = 0;
 	INT		posEnd  = 0;
 	eError	isRep	= E_OK;
+	DBG_UNREFERENCED_LOCAL_VARIABLE(lenSrc); // keeping local because it is unclear if ScintillaMsg() has side effects
 
 	_pFindCombo->getText(&_find);
 	_pReplaceCombo->getText(&_replace);
