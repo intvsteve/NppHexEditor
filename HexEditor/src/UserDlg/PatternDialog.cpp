@@ -26,7 +26,7 @@ extern char	hexMask[256][3];
 void PatternDlg::patternReplace(HWND hHexEdit)
 {
 	if (NLGetText(_hInst, _hParent, _T("Pattern Replace"), _txtCaption, sizeof(_txtCaption)) == 0) {
-		_tcscpy(_txtCaption, _T("Pattern Replace"));
+		_tcscpy_s(_txtCaption, sizeof(_txtCaption), _T("Pattern Replace"));
 	}
 
 	doDialog(hHexEdit);
@@ -42,7 +42,7 @@ void PatternDlg::patternReplace(HWND hHexEdit)
 void PatternDlg::insertColumns(HWND hHexEdit)
 {
 	if (NLGetText(_hInst, _hParent, _T("Insert Columns"), _txtCaption, sizeof(_txtCaption)) == 0) {
-		_tcscpy(_txtCaption, _T("Insert Columns"));
+		_tcscpy_s(_txtCaption, sizeof(_txtCaption), _T("Insert Columns"));
 	}
 
 	doDialog(hHexEdit);
@@ -71,6 +71,8 @@ void PatternDlg::doDialog(HWND hHexEdit)
 
 BOOL CALLBACK PatternDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(hwnd);
+	UNREFERENCED_PARAMETER(lParam);
 	switch (Message) 
 	{
 		case WM_INITDIALOG:
@@ -176,9 +178,9 @@ BOOL PatternDlg::onInsert(void)
 		TCHAR	txtMsgBox[MAX_PATH];
 
 		if (NLGetText(_hInst, _hParent, _T("Pos Between"), buffer, sizeof(buffer)) == 0) {
-			_stprintf(txtMsgBox, _T("Only column position between 0 and %d possible."), prop.columns);
+			_stprintf_s(txtMsgBox, sizeof(txtMsgBox), _T("Only column position between 0 and %d possible."), prop.columns);
 		} else {
-			_stprintf(txtMsgBox, buffer, prop.columns);
+			_stprintf_s(txtMsgBox, sizeof(txtMsgBox), buffer, prop.columns);
 		}
 		::MessageBox(_hParent, txtMsgBox, _T("Hex-Editor"), MB_OK|MB_ICONERROR);
 		return bRet;
@@ -207,7 +209,7 @@ BOOL PatternDlg::onInsert(void)
 
 	/* set pattern in columns */
 	cntPat = 0;
-	for (i = 0; i < lines; i++)
+	for (INT i = 0; i < lines; i++)
 	{
 		if (replaceLittleToBig(hSciTgt, hSciPat, cntPat, pos, 0, prop.bits * count) == E_OK)
 		{
@@ -299,8 +301,8 @@ BOOL PatternDlg::onReplace(void)
 	else
 	{
 		/* get horizontal and vertical gap size */
-		length = abs(prop.anchorPos - prop.cursorPos);
-		lines = abs(prop.anchorItem - prop.cursorItem);
+		length = abs(INT(prop.anchorPos - prop.cursorPos));
+		lines = abs(INT(prop.anchorItem - prop.cursorItem));
 
 		/* create pattern */
 		INT	patSize = 0;

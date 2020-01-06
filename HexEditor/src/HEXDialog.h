@@ -43,7 +43,7 @@ using namespace std;
 #define FACTOR				((_pCurProp->isBin == TRUE)?8:2)
 #define	SUBITEM_LENGTH		(_pCurProp->bits * FACTOR)
 #define FULL_SUBITEM		((_pCurProp->cursorItem * VIEW_ROW + (_pCurProp->cursorSubItem * _pCurProp->bits)) <= _currLength)
-#define DUMP_FIELD			(_pCurProp->columns + 1)
+#define DUMP_FIELD			((UINT)(_pCurProp->columns + 1))
 
 extern tClipboard	g_clipboard;
 
@@ -75,7 +75,7 @@ public:
 		if (_openDoc == -1)
 			return;
 
-		_tcscpy(_hexProp[_openDoc].szFileName, newPath);
+		_tcscpy_s(_hexProp[_openDoc].szFileName, _MAX_PATH, newPath);
 	};
 
 	void SetParentNppHandle(HWND hWnd, UINT cont)
@@ -86,7 +86,7 @@ public:
 		/* store given parent handle */
 		_hParentHandle = hWnd;
 
-		/* intial subclassing */
+		/* initial subclassing */
 		if (cont == MAIN_VIEW) {
 			SciSubClassWrp::Init(hWnd, wndParentProc0);
 		} else {
@@ -337,8 +337,8 @@ protected :
 
 private:
 	void UpdateHeader(BOOL isFirstTime = FALSE);
-	void ReadArrayToList(LPSTR text,INT iItem, INT iSubItem);
-	void AddressConvert(LPSTR text, INT length);
+	void ReadArrayToList(LPSTR text, UINT textLen, INT iItem, INT iSubItem);
+	void AddressConvert(LPSTR text, UINT textLen, INT length);
 	void DumpConvert(LPSTR text, UINT length);
 	void BinHexConvert(LPSTR text, INT length);
 	void MoveView(void);
@@ -441,6 +441,10 @@ private:
 
 	void runCursor(HWND hwnd, UINT Message, WPARAM wParam, unsigned long lParam)
 	{
+		UNREFERENCED_PARAMETER(hwnd);
+		UNREFERENCED_PARAMETER(Message);
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
 		if (_pCurProp != NULL)
 		{
 			_isCurOn ^= TRUE;

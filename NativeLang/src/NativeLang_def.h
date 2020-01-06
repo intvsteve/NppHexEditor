@@ -20,43 +20,17 @@
  * @note		This is the interface to NativeLang.dll plugin.\n
  *				You need only to include this file into your project and\n
  *				call the particular function to change language of dialogs\n
- *				combo boxes, Notepad++ menu, menues, list headers.\n
+ *				combo boxes, Notepad++ menu, menus, list headers.\n
  *				Or get only the new text. Only one language can be supported\n
  *				at once. The translations are stored in NativeLang.ini\n
  *				in the plugins config folder. NativeLang.ini needs is \n
- *				formated in USC2-little endian.\n
+ *				formatted in USC2-little endian.\n
  */
 
 #ifndef NATIVE_LANG_DEF_H
 #define NATIVE_LANG_DEF_H
 
 #include "PluginInterface.h"
-#include <shlwapi.h>
-#include <tchar.h>
-
-CONST TCHAR NATIVE_LANG_NAME[] = _T("NativeLang.dll");
-
-typedef enum eNatLangMsg {
-	NPP_NATLANG_CHANGEDLG,			/*!< enum change complete dialog info			*/
-	NPP_NATLANG_CHANGENPPMENU,		/*!< enum change plugins menu of Notepad++		*/
-	NPP_NATLANG_CHANGEMENU,			/*!< enum change another menu					*/
-	NPP_NATLANG_CHANGEHEADER,		/*!< enum change header elements				*/
-	NPP_NATLANG_CHANGECOMBO,		/*!< enum change combo elements					*/
-	NPP_NATLANG_GETTEXT,			/*!< enum get text via key name					*/
-} eNatLangMsg;
-
-/** This struct is only necessary for the comunication between this interface 
- *	and NativeLang plugin
- */
-typedef struct tNatLangInfo {
-	HANDLE		hCtrl;				/*!< HWND or HMENU								*/
-	LPCTSTR		pszCtrl;			/*!< section name								*/
-	LRESULT		lRes;				/*!< result value								*/
-	WPARAM		wParam;				/*!< additional information						*/
-	LPARAM		lParam;				/*!< additional information						*/
-} tNatLangInfo;
-
-
 
 /**
  * @fn			void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCTSTR pszSection)
@@ -76,21 +50,7 @@ typedef struct tNatLangInfo {
  *
  * @note		'&' sign for key selection supported, e.g. "&Cancel process"
  */
-static void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCTSTR pszSection)
-{
-	TCHAR		szPath[MAX_PATH];
-	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
-
-	tNatLangInfo		nli;
-	nli.hCtrl			= hWnd;
-	nli.pszCtrl			= pszSection;
-
-	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGEDLG;
-	ci.info				= &nli;
-	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
-}
+void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCTSTR pszSection);
 
 /**
  * @fn			void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCTSTR pszPluginName, FuncItem* funcItem, UINT nbFunc)
@@ -112,23 +72,7 @@ static void NLChangeDialog(HINSTANCE hInst, HWND hNpp, HWND hWnd, LPCTSTR pszSec
  *
  * @note		'&' sign for key selection supported, e.g. "&Explorer..."
  */
-static void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCTSTR pszPluginName, FuncItem* funcItem, UINT nbFunc)
-{
-	TCHAR		szPath[MAX_PATH];
-	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
-
-	tNatLangInfo		nli;
-	nli.hCtrl			= NULL;
-	nli.pszCtrl			= pszPluginName;
-	nli.wParam			= nbFunc;
-	nli.lParam			= (LPARAM)funcItem;
-
-	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGENPPMENU;
-	ci.info				= &nli;
-	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
-}
+void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCTSTR pszPluginName, FuncItem* funcItem, UINT nbFunc);
 
 /**
  * @fn			BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCTSTR pszMenu, UINT mf_ByComPos)
@@ -149,29 +93,11 @@ static void NLChangeNppMenu(HINSTANCE hInst, HWND hNpp, LPCTSTR pszPluginName, F
  *
  * @note		'&' sign for key selection supported, e.g. "&Open.."
  */
-static BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCTSTR pszMenu, UINT mf_ByComPos)
-{
-	TCHAR		szPath[MAX_PATH];
-	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
-
-	tNatLangInfo		nli;
-	nli.hCtrl			= hMenu;
-	nli.pszCtrl			= pszMenu;
-	nli.lRes			= 0;
-	nli.wParam			= mf_ByComPos;
-
-	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGEMENU;
-	ci.info				= &nli;
-	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
-
-	return (BOOL)nli.lRes;
-}
+BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCTSTR pszMenu, UINT mf_ByComPos);
 
 /**
  * @fn			void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCTSTR pszSection)
- * @brief		Change automaticaly the header text. Call function in e.g. WM_INITDIALOG.
+ * @brief		Change automatically the header text. Call function in e.g. WM_INITDIALOG.
  *
  * @param[in]	hInst			The instance handle of Notepad++.
  * @param[in]	hNpp			The window handle of Notepad++.
@@ -185,25 +111,11 @@ static BOOL NLChangeMenu(HINSTANCE hInst, HWND hNpp, HMENU hMenu, LPCTSTR pszMen
  *				orig_name="new name"\n
  *				...\n
  */
-static void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCTSTR pszSection)
-{
-	TCHAR		szPath[MAX_PATH];
-	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
-
-	tNatLangInfo		nli;
-	nli.hCtrl			= hHeader;
-	nli.pszCtrl			= pszSection;
-
-	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGEHEADER;
-	ci.info				= &nli;
-	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
-}
+void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCTSTR pszSection);
 
 /**
  * @fn			void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCTSTR pszSection, UINT count)
- * @brief		Change automaticaly the combo text. Call function in e.g. WM_INITDIALOG.
+ * @brief		Change automatically the combo text. Call function in e.g. WM_INITDIALOG.
  *
  * @param[in]	hInst			The instance handle of Notepad++.
  * @param[in]	hNpp			The window handle of Notepad++.
@@ -218,22 +130,7 @@ static void NLChangeHeader(HINSTANCE hInst, HWND hNpp, HWND hHeader, LPCTSTR psz
  *				pos_in_combo="new name"\n
  *				...\n
  */
-static void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCTSTR pszSection, UINT count)
-{
-	TCHAR		szPath[MAX_PATH];
-	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
-
-	tNatLangInfo		nli;
-	nli.hCtrl			= hCombo;
-	nli.pszCtrl			= pszSection;
-	nli.wParam			= count;
-
-	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_CHANGECOMBO;
-	ci.info				= &nli;
-	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
-}
+void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCTSTR pszSection, UINT count);
 
 /**
  * @fn			UINT NLGetText(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, LPTSTR pszText, UINT length)
@@ -254,27 +151,7 @@ static void NLChangeCombo(HINSTANCE hInst, HWND hNpp, HWND hCombo, LPCTSTR pszSe
  *
  * @note		Format tags are supported. Use % instead of \, e.g. %t %s %d %n
  */
-static UINT NLGetText(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, LPTSTR pszText, UINT length)
-{
-	TCHAR		szPath[MAX_PATH];
-	::GetModuleFileName((HMODULE)hInst, szPath, MAX_PATH);
-
-	tNatLangInfo		nli;
-	nli.hCtrl			= NULL;
-	nli.pszCtrl			= pszKey;
-	nli.lRes			= 0;
-	nli.wParam			= length;
-	nli.lParam			= (LPARAM)&pszText;
-
-	CommunicationInfo	ci;
-	ci.srcModuleName	= PathFindFileName(szPath);
-	ci.internalMsg		= NPP_NATLANG_GETTEXT;
-	ci.info				= &nli;
-	::SendMessage(hNpp, NPPM_MSGTOPLUGIN, (WPARAM)NATIVE_LANG_NAME, (LPARAM)&ci);
-
-	return (UINT)nli.lRes;
-}
-
+UINT NLGetText(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, LPTSTR pszText, UINT length);
 
 /**
  * @fn			BOOL NLMessageBox(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, UINT uType, HWND hDlg = NULL		)
@@ -293,22 +170,6 @@ static UINT NLGetText(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, LPTSTR pszText
  *				key_name="text%tcaption%t"\n
  *				...\n
  */
-static INT NLMessageBox(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, UINT uType, HWND hDlg = NULL)
-{
-	if (hDlg == NULL)
-		hDlg = hNpp;
-
-	LPTSTR	wPtr = NULL;
-	TCHAR	text[MAX_PATH]	= {0};
-	if (NLGetText(hInst, hNpp, pszKey, text, MAX_PATH)) {
-		wPtr = _tcstok(text, _T("\t"));
-		wPtr = _tcstok(NULL, _T("\t"));
-		return ::MessageBox(hDlg, text, wPtr, uType);
-	}
-	return FALSE;
-}
-
-
+INT NLMessageBox(HINSTANCE hInst, HWND hNpp, LPCTSTR pszKey, UINT uType, HWND hDlg = NULL);
 
 #endif	/* NATIVE_LANG_DEF_H */
-

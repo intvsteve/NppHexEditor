@@ -221,7 +221,7 @@ Utf8_16_Write::~Utf8_16_Write()
 
 FILE * Utf8_16_Write::fopen(const char *_name, const char *_type)
 {
-	m_pFile = ::fopen(_name, _type);
+	::fopen_s(&m_pFile, _name, _type);
 
 	m_bFirstWrite = true;
 

@@ -42,18 +42,20 @@ typedef enum {
 static int CALLBACK EnumFontFamExProc(ENUMLOGFONTEX *lpelfe, NEWTEXTMETRICEX *lpntme, DWORD FontType, LPARAM lParam)
 {
 	vector<string> *pvStrFont = (vector<string> *)lParam;
-    size_t vectSize = pvStrFont->size();
-    if (vectSize == 0)
+	size_t vectSize = pvStrFont->size();
+	UNREFERENCED_PARAMETER(lpntme);
+	UNREFERENCED_PARAMETER(FontType);
+	if (vectSize == 0)
 		pvStrFont->push_back((LPTSTR)lpelfe->elfFullName);
-    else
-    {
+	else
+	{
 		if(lpelfe->elfLogFont.lfPitchAndFamily & FIXED_PITCH)
 		{
 			LPCTSTR lastFontName = pvStrFont->at(vectSize - 1).c_str();
 			if (_tcscmp(lastFontName, (LPCTSTR)lpelfe->elfFullName))
 				pvStrFont->push_back((LPTSTR)lpelfe->elfFullName);
 		}
-    } 
+	}
 	return 1;
 };
 
@@ -67,6 +69,7 @@ UINT OptionDlg::doDialog(tProp *prop)
 
 BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(hwnd);
 	switch (Message) 
 	{
 		case WM_INITDIALOG:
@@ -86,7 +89,7 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 			for (UINT i = 0; i < PROP_MAX; i++)
 			{
 				if (NLGetText(_hInst, _hParent, szTabNames[i], text, sizeof(text)) == FALSE)
-					_tcscpy(text, szTabNames[i]);
+					_tcscpy_s(text, sizeof(text), szTabNames[i]);
 				item.pszText	= text;
 				item.cchTextMax	= (int)_tcslen(text);
 				::SendDlgItemMessage(_hSelf, IDC_TAB_PROP, TCM_INSERTITEM, i, (LPARAM)&item);
@@ -122,7 +125,7 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 
 			/* init font size combos */
 			for (size_t i = 0 ; i < G_FONTSIZE_MAX; i++) {
-				_stprintf(text, _T("%d"), g_iFontSize[i]);
+				_stprintf_s(text, sizeof(text), _T("%d"), g_iFontSize[i]);
 				::SendDlgItemMessage(_hSelf, IDC_COMBO_FONTSIZE, CB_ADDSTRING, 0, (LPARAM)text);
 			}
 
@@ -275,8 +278,10 @@ void OptionDlg::SetParams(void)
 	TCHAR		text[16];
 
 	/* set default format */
-	::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), _itot(_pProp->hexProp.columns, text, 10));
-	::SetWindowText(::GetDlgItem(_hSelf, IDC_ADDWIDTH_EDIT), _itot(_pProp->hexProp.addWidth, text, 10));
+	_itot_s(_pProp->hexProp.columns, text, sizeof(text), 10);
+	::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), text);
+	_itot_s(_pProp->hexProp.addWidth, text, sizeof(text), 10);
+	::SetWindowText(::GetDlgItem(_hSelf, IDC_ADDWIDTH_EDIT), text);
 	switch (_pProp->hexProp.bits)
 	{
 		case HEX_BYTE:
@@ -398,8 +403,8 @@ BOOL OptionDlg::GetParams(void)
 
 	if (bRet == TRUE) {
 		_pProp->hexProp.addWidth	= add;
-		_pProp->hexProp.columns		= col;
-		_pProp->hexProp.bits		= bits;
+		_pProp->hexProp.columns		= static_cast<SHORT>(col);
+		_pProp->hexProp.bits		= static_cast<SHORT>(bits);
 		
 		/* get endian */
 		if (::SendDlgItemMessage(_hSelf, IDC_RADIO_BIG, BM_GETCHECK, 0, 0) == BST_CHECKED)

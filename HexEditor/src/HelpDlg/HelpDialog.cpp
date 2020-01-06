@@ -30,6 +30,8 @@ void HelpDlg::doDialog()
 
 BOOL CALLBACK HelpDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(hwnd);
+	UNREFERENCED_PARAMETER(lParam);
 	switch (Message) 
 	{
         case WM_INITDIALOG :
