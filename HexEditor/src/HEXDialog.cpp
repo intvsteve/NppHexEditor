@@ -2507,8 +2507,6 @@ BOOL HexEdit::OnKeyDownItem(WPARAM wParam, LPARAM lParam)
 		default:
 			return GlobalKeys(wParam, lParam);
 	}
-
-	return TRUE;
 }
 
 
@@ -3080,7 +3078,6 @@ BOOL HexEdit::OnKeyDownDump(WPARAM wParam, LPARAM lParam)
 			return GlobalKeys(wParam, lParam);
 
 	}
-	return TRUE;
 }
 
 
