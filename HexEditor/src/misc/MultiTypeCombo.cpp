@@ -324,13 +324,14 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 			{
 				/* makes string 'AA BB CC' -> 'AABBCC' */
 				temp[0] = 0;
-				strcpy(corr, info->text);
-				ptr = strtok(corr, " ");
+				strcpy_s(corr, length+1, info->text);
+				CHAR *context = NULL;
+				ptr = strtok_s(corr, " ", &context);
 
 				while (ptr != NULL)
 				{
-					strcat(temp, ptr);
-					ptr = strtok(NULL, " ");
+					strcat_s(temp, length+1, ptr);
+					ptr = strtok_s(NULL, " ", &context);
 				}
 
 				/* if sting is odd -> return */
@@ -339,7 +340,7 @@ void MultiTypeCombo::decode(tComboInfo* info, eCodingType type)
 				{
 					HWND hWnd = ::GetActiveWindow();
 					if (NLMessageBox(_hInst, _hNpp, _T("MsgBox OddDigits"), MB_ICONWARNING | MB_OK) == FALSE)
-						::MessageBox(_hNpp, _T("There are odd digits. The data will be trunkated!"), _T("Hex-Editor"), MB_ICONWARNING | MB_OK);
+						::MessageBox(_hNpp, _T("There are odd digits. The data will be truncated!"), _T("Hex-Editor"), MB_ICONWARNING | MB_OK);
 					length--;
 				}
 
@@ -440,11 +441,11 @@ void MultiTypeCombo::encode(tEncComboInfo* info, eCodingType type)
 				{
 					memcpy(temp, info->text, info->length);
 
-					strcpy(info->text, hexMask[(UCHAR)temp[0]]);
+					strcpy_s(info->text, sizeof(info->text), hexMask[(UCHAR)temp[0]]);
 					for (INT i = 1; (i < info->length) && ((i*3) < COMBO_STR_MAX); i++)
 					{
-						strcat(info->text, " ");
-						strcat(info->text, hexMask[(UCHAR)temp[i]]);
+						strcat_s(info->text, sizeof(info->text), " ");
+						strcat_s(info->text, sizeof(info->text), hexMask[(UCHAR)temp[i]]);
 					}
 					info->length = (info->length * 3) - 1;
 					delete [] temp;

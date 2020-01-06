@@ -86,7 +86,7 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 			for (UINT i = 0; i < PROP_MAX; i++)
 			{
 				if (NLGetText(_hInst, _hParent, szTabNames[i], text, sizeof(text)) == FALSE)
-					_tcscpy(text, szTabNames[i]);
+					_tcscpy_s(text, sizeof(text), szTabNames[i]);
 				item.pszText	= text;
 				item.cchTextMax	= (int)_tcslen(text);
 				::SendDlgItemMessage(_hSelf, IDC_TAB_PROP, TCM_INSERTITEM, i, (LPARAM)&item);
@@ -122,7 +122,7 @@ BOOL CALLBACK OptionDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 
 			/* init font size combos */
 			for (size_t i = 0 ; i < G_FONTSIZE_MAX; i++) {
-				_stprintf(text, _T("%d"), g_iFontSize[i]);
+				_stprintf_s(text, sizeof(text), _T("%d"), g_iFontSize[i]);
 				::SendDlgItemMessage(_hSelf, IDC_COMBO_FONTSIZE, CB_ADDSTRING, 0, (LPARAM)text);
 			}
 
@@ -275,8 +275,10 @@ void OptionDlg::SetParams(void)
 	TCHAR		text[16];
 
 	/* set default format */
-	::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), _itot(_pProp->hexProp.columns, text, 10));
-	::SetWindowText(::GetDlgItem(_hSelf, IDC_ADDWIDTH_EDIT), _itot(_pProp->hexProp.addWidth, text, 10));
+	_itot_s(_pProp->hexProp.columns, text, sizeof(text), 10);
+	::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), text);
+	_itot_s(_pProp->hexProp.addWidth, text, sizeof(text), 10);
+	::SetWindowText(::GetDlgItem(_hSelf, IDC_ADDWIDTH_EDIT), text);
 	switch (_pProp->hexProp.bits)
 	{
 		case HEX_BYTE:

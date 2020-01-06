@@ -811,7 +811,7 @@ void HexEdit::UpdateDocs(LPCTSTR* pFiles, UINT numFiles, INT openDoc)
 			/* attach new file */
 			tHexProp	prop = getProp();
 
-			_tcscpy(prop.szFileName, pFiles[i]);
+			_tcscpy_s(prop.szFileName, sizeof(prop.szFileName), pFiles[i]);
 			prop.isModified		= FALSE;
 			prop.fontZoom		= 0;
 			prop.pCmpResult		= NULL;
@@ -1039,9 +1039,9 @@ void HexEdit::UpdateHeader(BOOL isFirstTime)
 		for (SHORT i = 0; i < _pCurProp->columns; i++)
 		{
 			if (getCLM()) {
-				_stprintf(temp, _T("%X"), i * _pCurProp->bits);
+				_stprintf_s(temp, sizeof(temp), _T("%X"), i * _pCurProp->bits);
 			} else {
-				_stprintf(temp, _T("%x"), i * _pCurProp->bits);
+				_stprintf_s(temp, sizeof(temp), _T("%x"), i * _pCurProp->bits);
 			}
 			ColSetupTermin.mask			= LVCF_TEXT | LVCF_FMT | LVCF_WIDTH;
 			ColSetupTermin.fmt			= LVCFMT_CENTER;
@@ -1466,7 +1466,7 @@ void HexEdit::Paste(void)
 					{
 						isOk = FALSE;
 						TCHAR	TEMP[256];
-						_stprintf(TEMP, _T("%s %d\n"), buffer, ASCIIConvert(buffer)/0x10);
+						_stprintf_s(TEMP, sizeof(TEMP), _T("%s %d\n"), buffer, ASCIIConvert(buffer)/0x10);
 						OutputDebugString(TEMP);
 					}
 				}

@@ -176,9 +176,9 @@ BOOL PatternDlg::onInsert(void)
 		TCHAR	txtMsgBox[MAX_PATH];
 
 		if (NLGetText(_hInst, _hParent, _T("Pos Between"), buffer, sizeof(buffer)) == 0) {
-			_stprintf(txtMsgBox, _T("Only column position between 0 and %d possible."), prop.columns);
+			_stprintf_s(txtMsgBox, sizeof(txtMsgBox), _T("Only column position between 0 and %d possible."), prop.columns);
 		} else {
-			_stprintf(txtMsgBox, buffer, prop.columns);
+			_stprintf_s(txtMsgBox, sizeof(txtMsgBox), buffer, prop.columns);
 		}
 		::MessageBox(_hParent, txtMsgBox, _T("Hex-Editor"), MB_OK|MB_ICONERROR);
 		return bRet;

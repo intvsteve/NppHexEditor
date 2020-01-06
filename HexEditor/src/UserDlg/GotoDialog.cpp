@@ -271,13 +271,16 @@ void GotoDlg::UpdateDialog(void)
 		::SendMessage(_hParentHandle, HEXM_GETLINECNT, 0, (LPARAM)&maxLine);
 
 		/* set current line info */
-		::SetWindowTextA(::GetDlgItem(_hSelf, IDC_CURRLINE), _itoa(curLine + LINE_OFFSET, text, 10));
+		_itoa_s(curLine + LINE_OFFSET, text, sizeof(text), 10);
+		::SetWindowTextA(::GetDlgItem(_hSelf, IDC_CURRLINE), text);
 
 		/* set max possible position */
 		if (_isOff == TRUE) {
-			::SetWindowTextA(::GetDlgItem(_hSelf, IDC_LASTLINE), _itoa(maxLine - curLine, text, 10));
+			_itoa_s(maxLine - curLine, text, sizeof(text), 10);
+			::SetWindowTextA(::GetDlgItem(_hSelf, IDC_LASTLINE), text);
 		} else {
-			::SetWindowTextA(::GetDlgItem(_hSelf, IDC_LASTLINE), _itoa(maxLine + LINE_OFFSET, text, 10));
+			_itoa_s(maxLine + LINE_OFFSET, text, sizeof(text), 10);
+			::SetWindowTextA(::GetDlgItem(_hSelf, IDC_LASTLINE), text);
 		}
 	}
 }
