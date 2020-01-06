@@ -205,14 +205,14 @@ void GotoDlg::calcAddress(void)
 			if (_isHex == TRUE)
 			{
 				newPos = atoi(temp) * prop.columns * prop.bits;
-				sprintf(text, "%x", newPos);
+				sprintf_s(text, sizeof(text), "%x", newPos);
 				::SetWindowTextA(_hLineEdit, text);
 			}
 			else
 			{
 				newPos = ASCIIConvert(temp);
 				newPos /= (prop.columns * prop.bits);
-				sprintf(text, "%d", newPos);
+				sprintf_s(text, sizeof(text), "%d", newPos);
 				::SetWindowTextA(_hLineEdit, text);
 			}
 		}
@@ -221,14 +221,14 @@ void GotoDlg::calcAddress(void)
 			if (_isHex == TRUE)
 			{
 				newPos = atoi(temp) * prop.columns * prop.bits;
-				sprintf(text, "%x", newPos);
+				sprintf_s(text, sizeof(text), "%x", newPos);
 				::SetWindowTextA(_hLineEdit, text);
 			}
 			else
 			{
 				newPos = ASCIIConvert(temp);
 				newPos /= (prop.columns * prop.bits);
-				sprintf(text, "%d", newPos + 1);
+				sprintf_s(text, sizeof(text), "%d", newPos + 1);
 				::SetWindowTextA(_hLineEdit, text);
 			}
 		}
@@ -252,14 +252,14 @@ void GotoDlg::UpdateDialog(void)
 		maxPos--;
 
 		/* set current line info */
-		sprintf(text, "%08X", curPos);
+		sprintf_s(text, sizeof(text), "%08X", curPos);
 		::SetDlgItemTextA(_hSelf, IDC_CURRLINE, text);
 
 		/* set max possible position */
 		if (_isOff == TRUE) {
-			sprintf(text, "%08X", maxPos - curPos);
+			sprintf_s(text, sizeof(text), "%08X", maxPos - curPos);
 		} else {
-			sprintf(text, "%08X", maxPos);
+			sprintf_s(text, sizeof(text), "%08X", maxPos);
 		}
 		::SetDlgItemTextA(_hSelf, IDC_LASTLINE, text);
 	}
@@ -271,13 +271,13 @@ void GotoDlg::UpdateDialog(void)
 		::SendMessage(_hParentHandle, HEXM_GETLINECNT, 0, (LPARAM)&maxLine);
 
 		/* set current line info */
-		::SetWindowTextA(::GetDlgItem(_hSelf, IDC_CURRLINE), itoa(curLine + LINE_OFFSET, text, 10));
+		::SetWindowTextA(::GetDlgItem(_hSelf, IDC_CURRLINE), _itoa(curLine + LINE_OFFSET, text, 10));
 
 		/* set max possible position */
 		if (_isOff == TRUE) {
-			::SetWindowTextA(::GetDlgItem(_hSelf, IDC_LASTLINE), itoa(maxLine - curLine, text, 10));
+			::SetWindowTextA(::GetDlgItem(_hSelf, IDC_LASTLINE), _itoa(maxLine - curLine, text, 10));
 		} else {
-			::SetWindowTextA(::GetDlgItem(_hSelf, IDC_LASTLINE), itoa(maxLine + LINE_OFFSET, text, 10));
+			::SetWindowTextA(::GetDlgItem(_hSelf, IDC_LASTLINE), _itoa(maxLine + LINE_OFFSET, text, 10));
 		}
 	}
 }

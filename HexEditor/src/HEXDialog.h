@@ -75,7 +75,7 @@ public:
 		if (_openDoc == -1)
 			return;
 
-		_tcscpy(_hexProp[_openDoc].szFileName, newPath);
+		_tcscpy_s(_hexProp[_openDoc].szFileName, _MAX_PATH, newPath);
 	};
 
 	void SetParentNppHandle(HWND hWnd, UINT cont)
@@ -86,7 +86,7 @@ public:
 		/* store given parent handle */
 		_hParentHandle = hWnd;
 
-		/* intial subclassing */
+		/* initial subclassing */
 		if (cont == MAIN_VIEW) {
 			SciSubClassWrp::Init(hWnd, wndParentProc0);
 		} else {

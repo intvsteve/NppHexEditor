@@ -45,10 +45,12 @@ BOOL CALLBACK ColumnDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPA
 			goToCenter();
 
 			if (_isColumn == TRUE) {
-				::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), _itot(_column, text, 10));
+				_itot_s(_column, text, sizeof(text), 10);
+				::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), text);
 				NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("ColumnCount"));
 			} else {
-				::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), _itot(_width, text, 10));
+				_itot_s(_width, text, sizeof(text), 10);
+				::SetWindowText(::GetDlgItem(_hSelf, IDC_COLUMN_EDIT), text);
 				::SetWindowText(_hSelf, _T("Address Width"));
 				NLChangeDialog(_hInst, _nppData._nppHandle, _hSelf, _T("AddressWidth"));
 			}

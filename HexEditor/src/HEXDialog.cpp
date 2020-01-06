@@ -1998,13 +1998,13 @@ void HexEdit::TrackMenu(POINT pt)
 	::AppendMenu(hSubMenu, MF_SEPARATOR, 0, _T("-----------------"));
 	/* set binary decoding */
 	if (NLGetText(_hInst, _hParent, _pCurProp->isBin == TRUE ? _T("to Hex"):_T("to Binary"), txtMenu, sizeof(txtMenu)) == FALSE)
-		_tcscpy(txtMenu, _pCurProp->isBin == TRUE ? _T("to Hex"):_T("to Binary"));
+		_tcscpy_s(txtMenu, sizeof(txtMenu), _pCurProp->isBin == TRUE ? _T("to Hex"):_T("to Binary"));
 	::AppendMenu(hSubMenu, MF_STRING, 11, txtMenu);
 	/* change between big- and little-endian */
 	if (_pCurProp->bits > HEX_BYTE)
 	{
 		if (NLGetText(_hInst, _hParent, _pCurProp->isLittle == TRUE ? _T("to BigEndian"):_T("to LittleEndian"), txtMenu, sizeof(txtMenu)) == FALSE)
-			_tcscpy(txtMenu, _pCurProp->isLittle == TRUE ? _T("to BigEndian"):_T("to LittleEndian"));
+			_tcscpy_s(txtMenu, sizeof(txtMenu), _pCurProp->isLittle == TRUE ? _T("to BigEndian"):_T("to LittleEndian"));
 		::AppendMenu(hSubMenu, MF_STRING, 12, txtMenu);
 	}
 
@@ -4191,11 +4191,11 @@ void HexEdit::SetStatusBar(void)
 		/* set mode */
 		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_DOC_TYPE, (LPARAM)_T("Hex Edit View"));
 		/* set doc length */
-		_stprintf(buffer, _T("nb char : %d"), _currLength);
+		_stprintf_s(buffer, sizeof(buffer), _T("nb char : %d"), _currLength);
 		::SendMessage(_hParent, NPPM_SETSTATUSBAR, STATUSBAR_DOC_SIZE, (LPARAM)buffer);
 
 		/* set doc length */
-		_stprintf(buffer, _T("Ln : %d    Col : %d    Sel : %d"), 
+		_stprintf_s(buffer, sizeof(buffer), _T("Ln : %d    Col : %d    Sel : %d"), 
 			_pCurProp->cursorItem + 1, 
 			(GetCurrentPos() % VIEW_ROW) + 1,
 			(GetCurrentPos() > GetAnchor() ? GetCurrentPos()-GetAnchor() : GetAnchor()-GetCurrentPos()));

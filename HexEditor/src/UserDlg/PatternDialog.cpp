@@ -26,7 +26,7 @@ extern char	hexMask[256][3];
 void PatternDlg::patternReplace(HWND hHexEdit)
 {
 	if (NLGetText(_hInst, _hParent, _T("Pattern Replace"), _txtCaption, sizeof(_txtCaption)) == 0) {
-		_tcscpy(_txtCaption, _T("Pattern Replace"));
+		_tcscpy_s(_txtCaption, sizeof(_txtCaption), _T("Pattern Replace"));
 	}
 
 	doDialog(hHexEdit);
@@ -42,7 +42,7 @@ void PatternDlg::patternReplace(HWND hHexEdit)
 void PatternDlg::insertColumns(HWND hHexEdit)
 {
 	if (NLGetText(_hInst, _hParent, _T("Insert Columns"), _txtCaption, sizeof(_txtCaption)) == 0) {
-		_tcscpy(_txtCaption, _T("Insert Columns"));
+		_tcscpy_s(_txtCaption, sizeof(_txtCaption), _T("Insert Columns"));
 	}
 
 	doDialog(hHexEdit);
