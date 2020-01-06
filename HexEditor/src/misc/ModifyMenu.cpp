@@ -477,6 +477,13 @@ void UpdateShortCut(NotifyHeader *nmhdr)
     }
 }
 
+inline bool IsKeyPressed(int virtualKey)
+{
+	const SHORT KEY_DOWN = 0x80u; // this looks like a bug -- should be 0x8000? See: https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getkeystate
+	auto keyState = ::GetKeyState(virtualKey);
+	return (KEY_DOWN & keyState) == KEY_DOWN;
+}
+
 UINT MapShortCutToMenuId(BYTE uChar)
 {
     UINT    max = sizeof(g_scList) / sizeof(tShortCut);
@@ -487,9 +494,9 @@ UINT MapShortCutToMenuId(BYTE uChar)
         {
             if (g_scList[i].isEnable == TRUE)
             {
-                if ((g_scList[i].scKey._isAlt   == TRUE) != ((bool)(0x80 & ::GetKeyState(VK_MENU))))    return 0;
-                if ((g_scList[i].scKey._isCtrl  == TRUE) != ((bool)(0x80 & ::GetKeyState(VK_CONTROL)))) return 0;
-                if ((g_scList[i].scKey._isShift == TRUE) != ((bool)(0x80 & ::GetKeyState(VK_SHIFT))))   return 0;
+                if (g_scList[i].scKey._isAlt != IsKeyPressed(VK_MENU))    return 0;
+                if (g_scList[i].scKey._isCtrl != IsKeyPressed(VK_CONTROL)) return 0;
+                if (g_scList[i].scKey._isShift != IsKeyPressed(VK_SHIFT))   return 0;
                 return g_scList[i].uID;
             }
             return 0;
