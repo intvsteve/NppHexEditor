@@ -1524,7 +1524,7 @@ void DoCompare(void)
 			DWORD	hasWritten	= 0;
 			CHAR    val		    = TRUE;
 
-            for (UINT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
+            for (INT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
 			    ::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
             }
 
