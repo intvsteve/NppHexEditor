@@ -99,6 +99,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\NativeLang\src\NativeLang_def.cpp" />
     <ClCompile Include="..\..\src\misc\ColorCombo.cpp" />
     <ClCompile Include="..\..\src\misc\ColorPopup.cpp" />
     <ClCompile Include="..\..\src\OptionDlg\ColumnDialog.cpp" />
