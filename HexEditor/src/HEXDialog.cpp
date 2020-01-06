@@ -1095,7 +1095,7 @@ void HexEdit::Copy(void)
 		INT			length;
 		INT			posBeg;
 		INT			posEnd;
-		tClipboard	clipboard;
+		tClipboard	clipboard = {0};
 
 		/* store selection */
 		clipboard.selection = _pCurProp->selection;
@@ -1234,7 +1234,7 @@ void HexEdit::Cut(void)
 		INT			length	= 0;
 		INT			posBeg	= 0;
 		INT			posEnd	= 0;
-		tClipboard	clipboard;
+		tClipboard	clipboard = {0};
 
 		/* store selection */
 		clipboard.selection = _pCurProp->selection;
