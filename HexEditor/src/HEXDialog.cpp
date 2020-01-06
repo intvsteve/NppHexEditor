@@ -3870,7 +3870,7 @@ void HexEdit::ToggleBookmark(UINT iItem)
 	{
 		if (_pCurProp->vBookmarks[i].iItem == iItem) {
 			/* if bookmark exists delete it from list */
-			_pCurProp->vBookmarks.erase(&_pCurProp->vBookmarks[i]);
+			_pCurProp->vBookmarks.erase(_pCurProp->vBookmarks.begin() + i);
 			isChanged = TRUE;
 		}
 		else if (_pCurProp->vBookmarks[i].iItem > iItem) {
@@ -3915,7 +3915,7 @@ void HexEdit::UpdateBookmarks(UINT firstAdd, INT length)
 
 			if ((_pCurProp->vBookmarks[i].lAddress == firstAdd) && (length < 0)) {
 				/* remove bookmark if is in a delete section */
-				_pCurProp->vBookmarks.erase(&_pCurProp->vBookmarks[i]);
+				_pCurProp->vBookmarks.erase(_pCurProp->vBookmarks.begin() + i);
 				i--;
 			} else if ((UINT)_pCurProp->vBookmarks[i].lAddress > firstAdd) {
 				/* calculate new addresses of bookmarks behind the first address */
@@ -3927,7 +3927,7 @@ void HexEdit::UpdateBookmarks(UINT firstAdd, INT length)
 
 				/* if some data was deleted and the changed item matches with the previous one delete it */
 				if ((i != 0) && (_pCurProp->vBookmarks[i].lAddress == _pCurProp->vBookmarks[i-1].lAddress)) {
-					_pCurProp->vBookmarks.erase(&_pCurProp->vBookmarks[i]);
+					_pCurProp->vBookmarks.erase(_pCurProp->vBookmarks.begin() + i);
 					i--;
 				}
 
