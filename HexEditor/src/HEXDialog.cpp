@@ -149,7 +149,7 @@ BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 
 						if (lvItem->mask & LVIF_TEXT)
 						{
-							ReadArrayToList(text, lvItem->iItem ,lvItem->iSubItem);
+							ReadArrayToList(text, sizeof(text), lvItem->iItem ,lvItem->iSubItem);
 #ifdef UNICODE
 							static WCHAR wText[129] = _T("\0");
 							::MultiByteToWideChar(CP_ACP, 0, text, -1, wText, 129);
@@ -1746,7 +1746,7 @@ void HexEdit::ZoomRestore(void)
 }
 
 
-void HexEdit::ReadArrayToList(LPSTR text, INT iItem, INT iSubItem)
+void HexEdit::ReadArrayToList(LPSTR text, UINT textLen, INT iItem, INT iSubItem)
 {
 	if (_pCurProp == NULL)
 		return;
@@ -1757,36 +1757,36 @@ void HexEdit::ReadArrayToList(LPSTR text, INT iItem, INT iSubItem)
 		if (getCLM()) {
 			switch (_pCurProp->addWidth)
 			{
-				case 4: sprintf(text, "%04X", iItem * VIEW_ROW); break;
-				case 5: sprintf(text, "%05X", iItem * VIEW_ROW); break;
-				case 6: sprintf(text, "%06X", iItem * VIEW_ROW); break;
-				case 7: sprintf(text, "%07X", iItem * VIEW_ROW); break;
-				case 8: sprintf(text, "%08X", iItem * VIEW_ROW); break;
-				case 9: sprintf(text, "%09X", iItem * VIEW_ROW); break;
-				case 10: sprintf(text, "%010X", iItem * VIEW_ROW); break;
-				case 11: sprintf(text, "%011X", iItem * VIEW_ROW); break;
-				case 12: sprintf(text, "%012X", iItem * VIEW_ROW); break;
-				case 13: sprintf(text, "%013X", iItem * VIEW_ROW); break;
-				case 14: sprintf(text, "%014X", iItem * VIEW_ROW); break;
-				case 15: sprintf(text, "%015X", iItem * VIEW_ROW); break;
-				case 16: sprintf(text, "%016X", iItem * VIEW_ROW); break;
+				case 4: sprintf_s(text, textLen, "%04X", iItem * VIEW_ROW); break;
+				case 5: sprintf_s(text, textLen, "%05X", iItem * VIEW_ROW); break;
+				case 6: sprintf_s(text, textLen, "%06X", iItem * VIEW_ROW); break;
+				case 7: sprintf_s(text, textLen, "%07X", iItem * VIEW_ROW); break;
+				case 8: sprintf_s(text, textLen, "%08X", iItem * VIEW_ROW); break;
+				case 9: sprintf_s(text, textLen, "%09X", iItem * VIEW_ROW); break;
+				case 10: sprintf_s(text, textLen, "%010X", iItem * VIEW_ROW); break;
+				case 11: sprintf_s(text, textLen, "%011X", iItem * VIEW_ROW); break;
+				case 12: sprintf_s(text, textLen, "%012X", iItem * VIEW_ROW); break;
+				case 13: sprintf_s(text, textLen, "%013X", iItem * VIEW_ROW); break;
+				case 14: sprintf_s(text, textLen, "%014X", iItem * VIEW_ROW); break;
+				case 15: sprintf_s(text, textLen, "%015X", iItem * VIEW_ROW); break;
+				case 16: sprintf_s(text, textLen, "%016X", iItem * VIEW_ROW); break;
 			}
 		} else {
 			switch (_pCurProp->addWidth)
 			{
-				case 4: sprintf(text, "%04x", iItem * VIEW_ROW); break;
-				case 5: sprintf(text, "%05x", iItem * VIEW_ROW); break;
-				case 6: sprintf(text, "%06x", iItem * VIEW_ROW); break;
-				case 7: sprintf(text, "%07x", iItem * VIEW_ROW); break;
-				case 8: sprintf(text, "%08x", iItem * VIEW_ROW); break;
-				case 9: sprintf(text, "%09x", iItem * VIEW_ROW); break;
-				case 10: sprintf(text, "%010x", iItem * VIEW_ROW); break;
-				case 11: sprintf(text, "%011x", iItem * VIEW_ROW); break;
-				case 12: sprintf(text, "%012x", iItem * VIEW_ROW); break;
-				case 13: sprintf(text, "%013x", iItem * VIEW_ROW); break;
-				case 14: sprintf(text, "%014x", iItem * VIEW_ROW); break;
-				case 15: sprintf(text, "%015x", iItem * VIEW_ROW); break;
-				case 16: sprintf(text, "%016x", iItem * VIEW_ROW); break;
+				case 4: sprintf_s(text, textLen, "%04x", iItem * VIEW_ROW); break;
+				case 5: sprintf_s(text, textLen, "%05x", iItem * VIEW_ROW); break;
+				case 6: sprintf_s(text, textLen, "%06x", iItem * VIEW_ROW); break;
+				case 7: sprintf_s(text, textLen, "%07x", iItem * VIEW_ROW); break;
+				case 8: sprintf_s(text, textLen, "%08x", iItem * VIEW_ROW); break;
+				case 9: sprintf_s(text, textLen, "%09x", iItem * VIEW_ROW); break;
+				case 10: sprintf_s(text, textLen, "%010x", iItem * VIEW_ROW); break;
+				case 11: sprintf_s(text, textLen, "%011x", iItem * VIEW_ROW); break;
+				case 12: sprintf_s(text, textLen, "%012x", iItem * VIEW_ROW); break;
+				case 13: sprintf_s(text, textLen, "%013x", iItem * VIEW_ROW); break;
+				case 14: sprintf_s(text, textLen, "%014x", iItem * VIEW_ROW); break;
+				case 15: sprintf_s(text, textLen, "%015x", iItem * VIEW_ROW); break;
+				case 16: sprintf_s(text, textLen, "%016x", iItem * VIEW_ROW); break;
 			}
 		}
 	}
@@ -1816,12 +1816,12 @@ void HexEdit::ReadArrayToList(LPSTR text, INT iItem, INT iSubItem)
 			if ((posBeg + _pCurProp->bits) < _currLength)
 			{
 				ScintillaGetText(_hParentHandle, text, posBeg, posBeg + _pCurProp->bits);
-				AddressConvert(text, _pCurProp->bits);
+				AddressConvert(text, textLen, _pCurProp->bits);
 			}
 			else
 			{
 				ScintillaGetText(_hParentHandle, text, posBeg, _currLength);
-				AddressConvert(text, _currLength - posBeg);
+				AddressConvert(text, textLen, _currLength - posBeg);
 				memset(&text[(_currLength - posBeg)*FACTOR], 0x20, SUBITEM_LENGTH);
 				text[SUBITEM_LENGTH] = 0;
 			}
@@ -1835,7 +1835,7 @@ void HexEdit::ReadArrayToList(LPSTR text, INT iItem, INT iSubItem)
 }
 
 
-void HexEdit::AddressConvert(LPSTR text, INT length)
+void HexEdit::AddressConvert(LPSTR text, UINT textLen, INT length)
 {
 	CHAR temp[65];
 
@@ -1845,18 +1845,18 @@ void HexEdit::AddressConvert(LPSTR text, INT length)
 	{
 		if (_pCurProp->isBin)
 		{
-			strcpy(text, binMask[(UCHAR)temp[--length]]);
+			strcpy_s(text, textLen, binMask[(UCHAR)temp[--length]]);
 			for (INT i = length-1; i >= 0; --i)
 			{
-				strcat(text, binMask[(UCHAR)temp[i]]);
+				strcat_s(text, textLen, binMask[(UCHAR)temp[i]]);
 			}
 		}
 		else
 		{
-			strcpy(text, hexMask[(UCHAR)temp[--length]]);
+			strcpy_s(text, textLen, hexMask[(UCHAR)temp[--length]]);
 			for (INT i = length-1; i >= 0; --i)
 			{
-				strcat(text, hexMask[(UCHAR)temp[i]]);
+				strcat_s(text, textLen, hexMask[(UCHAR)temp[i]]);
 			}
 		}
 	}
@@ -1864,18 +1864,18 @@ void HexEdit::AddressConvert(LPSTR text, INT length)
 	{
 		if (_pCurProp->isBin)
 		{
-			strcpy(text, binMask[(UCHAR)temp[0]]);
+			strcpy_s(text, textLen, binMask[(UCHAR)temp[0]]);
 			for (INT i = 1; i < length; i++)
 			{
-				strcat(text, binMask[(UCHAR)temp[i]]);
+				strcat_s(text, textLen, binMask[(UCHAR)temp[i]]);
 			}
 		}
 		else
 		{
-			strcpy(text, hexMask[(UCHAR)temp[0]]);
+			strcpy_s(text, textLen, hexMask[(UCHAR)temp[0]]);
 			for (INT i = 1; i < length; i++)
 			{
-				strcat(text, hexMask[(UCHAR)temp[i]]);
+				strcat_s(text, textLen, hexMask[(UCHAR)temp[i]]);
 			}
 		}
 	}

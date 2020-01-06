@@ -337,8 +337,8 @@ protected :
 
 private:
 	void UpdateHeader(BOOL isFirstTime = FALSE);
-	void ReadArrayToList(LPSTR text,INT iItem, INT iSubItem);
-	void AddressConvert(LPSTR text, INT length);
+	void ReadArrayToList(LPSTR text, UINT textLen, INT iItem, INT iSubItem);
+	void AddressConvert(LPSTR text, UINT textLen, INT length);
 	void DumpConvert(LPSTR text, UINT length);
 	void BinHexConvert(LPSTR text, INT length);
 	void MoveView(void);
