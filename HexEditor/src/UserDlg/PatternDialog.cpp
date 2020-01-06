@@ -207,7 +207,7 @@ BOOL PatternDlg::onInsert(void)
 
 	/* set pattern in columns */
 	cntPat = 0;
-	for (i = 0; i < lines; i++)
+	for (INT i = 0; i < lines; i++)
 	{
 		if (replaceLittleToBig(hSciTgt, hSciPat, cntPat, pos, 0, prop.bits * count) == E_OK)
 		{

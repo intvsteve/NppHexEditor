@@ -1905,7 +1905,7 @@ void HexEdit::DumpConvert(LPSTR text, UINT length)
 		UINT offset = length % _pCurProp->bits;
 		UINT max	= length / _pCurProp->bits + 1;
 
-		for (i = 1; i <= max; i++)
+		for (UINT i = 1; i <= max; i++)
 		{
 			if (i == max)
 			{

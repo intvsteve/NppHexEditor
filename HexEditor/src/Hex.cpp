@@ -1288,7 +1288,7 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 				UINT offset = (lenCpy) % hexProp.bits;
 				UINT max	= (lenCpy) / hexProp.bits + 1;
 
-				for (i = 1; i <= max; i++)
+				for (UINT i = 1; i <= max; i++)
 				{
 					if (i == max)
 					{
