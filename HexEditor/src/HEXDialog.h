@@ -43,7 +43,7 @@ using namespace std;
 #define FACTOR				((_pCurProp->isBin == TRUE)?8:2)
 #define	SUBITEM_LENGTH		(_pCurProp->bits * FACTOR)
 #define FULL_SUBITEM		((_pCurProp->cursorItem * VIEW_ROW + (_pCurProp->cursorSubItem * _pCurProp->bits)) <= _currLength)
-#define DUMP_FIELD			(_pCurProp->columns + 1)
+#define DUMP_FIELD			((UINT)(_pCurProp->columns + 1))
 
 extern tClipboard	g_clipboard;
 

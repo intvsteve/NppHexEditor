@@ -186,7 +186,7 @@ BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 
 								/* get first and last visible sub items */
 								::GetClientRect(_hListCtrl, &rc);
-								for (UINT uSubItem = 1; uSubItem <= (UINT)DUMP_FIELD; uSubItem++) {
+								for (UINT uSubItem = 1; uSubItem <= DUMP_FIELD; uSubItem++) {
 									ListView_GetSubItemRect(_hListCtrl, lpCD->nmcd.dwItemSpec, uSubItem, LVIR_BOUNDS, &rcSubItem);
 									if ((rc.left <= rcSubItem.right) && (rc.right >= rcSubItem.left)) {
 										if (_uFirstVisSubItem == 0) {
@@ -491,7 +491,7 @@ LRESULT HexEdit::runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 				else
 				{
 					/* change edit type */
-					_pCurProp->editType = (info.iSubItem == DUMP_FIELD)? HEX_EDIT_ASCII : HEX_EDIT_HEX;
+					_pCurProp->editType = (info.iSubItem == (int)DUMP_FIELD)? HEX_EDIT_ASCII : HEX_EDIT_HEX;
 
 					/* keep sure that selection is off */
 					if (!0x80 & ::GetKeyState(VK_SHIFT)) {
@@ -617,7 +617,7 @@ LRESULT HexEdit::runProcList(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lPar
 						return FALSE;
 
 
-					if (info.iSubItem == DUMP_FIELD)
+					if (info.iSubItem == (int)DUMP_FIELD)
 					{
 						/* calculate cursor */
 						_pCurProp->cursorPos = CalcCursorPos(info);
@@ -1428,7 +1428,7 @@ void HexEdit::Paste(void)
 					INT		posBeg  = ScintillaMsg(hSciTgt, SCI_GETTARGETSTART);
 					INT		posEnd  = ScintillaMsg(hSciTgt, SCI_GETTARGETEND);
 					INT		size	= posEnd - posBeg;
-					INT		curLine = ScintillaMsg(hSciTgt, SCI_LINEFROMPOSITION, posBeg);
+					UINT		curLine = ScintillaMsg(hSciTgt, SCI_LINEFROMPOSITION, posBeg);
 					ScintillaGetText(hSciTgt, buffer, posBeg, posEnd-1);
 					buffer[size-1] = 0;
 
@@ -1792,7 +1792,7 @@ void HexEdit::ReadArrayToList(LPSTR text, UINT textLen, INT iItem, INT iSubItem)
 		}
 	}
 	/* create dump */
-	else if (iSubItem == DUMP_FIELD)
+	else if (iSubItem == (int)DUMP_FIELD)
 	{
 		UINT	posBeg = iItem * VIEW_ROW;
 
@@ -1985,7 +1985,7 @@ void HexEdit::TrackMenu(POINT pt)
 	BOOL	isChanged	= TRUE;
 	UINT	anchorPos	= GetAnchor();
 	UINT	cursorPos	= GetCurrentPos();
-	UINT	oldColumns  = _pCurProp->columns;
+	SHORT	oldColumns  = _pCurProp->columns;
 	TCHAR	txtMenu[16];
 
 	/* set bit decoding */
@@ -2331,7 +2331,7 @@ void HexEdit::SelectItem(UINT iItem, UINT iSubItem, INT iCursor)
 		_pCurProp->isSel			= FALSE;
 
 		if ((editMax == _currLength + _pCurProp->bits) && (_pCurProp->cursorSubItem == 1) && 
-			((_currLength / VIEW_ROW) == ListView_GetItemCount(_hListCtrl)))
+			(LRESULT(_currLength / VIEW_ROW) == ListView_GetItemCount(_hListCtrl)))
 		{
 			UINT itemCnt = ListView_GetItemCount(_hListCtrl);
 			ListView_SetItemCountEx(_hListCtrl, itemCnt + 1, 0);
@@ -2365,7 +2365,7 @@ void HexEdit::OnMouseClickItem(WPARAM wParam, LPARAM lParam)
 	{
 		/* set cursor if the same as before */
 		UINT	cursor = 0;
-		if ((_pCurProp->cursorItem == info.iItem) && (_pCurProp->cursorSubItem == info.iSubItem) &&
+		if ((_pCurProp->cursorItem == (UINT)info.iItem) && (_pCurProp->cursorSubItem == (UINT)info.iSubItem) &&
 			(_pCurProp->editType == HEX_EDIT_HEX))
 		{
 			cursor = CalcCursorPos(info);
@@ -2482,7 +2482,7 @@ BOOL HexEdit::OnKeyDownItem(WPARAM wParam, LPARAM lParam)
 			{
 				if (isCtrl)
 				{
-					if (_pCurProp->cursorPos == (SUBITEM_LENGTH - FACTOR)) {
+					if (_pCurProp->cursorPos == (UINT)(SUBITEM_LENGTH - FACTOR)) {
 						if (_pCurProp->cursorSubItem < (UINT)_pCurProp->columns) {
 							SelectItem(_pCurProp->cursorItem, _pCurProp->cursorSubItem + 1);
 						} else {
@@ -2648,13 +2648,13 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 		/* paint cursor */
 		if (item == _pCurProp->cursorItem)
 		{
-			if ((_pCurProp->editType == HEX_EDIT_HEX) && (subItem == _pCurProp->cursorSubItem)) {
+			if ((_pCurProp->editType == HEX_EDIT_HEX) && ((UINT)subItem == _pCurProp->cursorSubItem)) {
 				::GetTextExtentPoint(hDc, text, _pCurProp->cursorPos, &size);
 				rcCursor.left += size.cx;
 				::GetTextExtentPoint(hDc, text, _pCurProp->cursorPos + FACTOR, &size);
 				rcCursor.right += size.cx;
 				DrawCursor(hDc, rcCursor);
-			} else if ((_pCurProp->editType == HEX_EDIT_ASCII) && ((_pCurProp->cursorPos / _pCurProp->bits) + 1 == subItem)) {
+			} else if ((_pCurProp->editType == HEX_EDIT_ASCII) && ((_pCurProp->cursorPos / _pCurProp->bits) + 1 == (UINT)subItem)) {
 				::GetTextExtentPoint(hDc, text, (_pCurProp->cursorPos % _pCurProp->bits) * FACTOR, &size);
 				rcCursor.left += size.cx;
 				::GetTextExtentPoint(hDc, text, ((_pCurProp->cursorPos % _pCurProp->bits) * FACTOR) + FACTOR, &size);
@@ -2792,7 +2792,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 		{
 			if ((_pCurProp->selection == HEX_SEL_BLOCK) || (firstItem == lastItem))
 			{
-				if ((subItem == (_pCurProp->cursorSubItem - 1)) && 
+				if (((UINT)subItem == (_pCurProp->cursorSubItem - 1)) && 
 					((_pCurProp->cursorPos % _pCurProp->bits) == 0) && (_pCurProp->anchorPos < _pCurProp->cursorPos))
 				{
 					/* correction to last element */
@@ -2800,7 +2800,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					rcCursor.left += size.cx;
 					DrawCursor(hDc, rcCursor);
 				}
-				else if ((subItem == _pCurProp->cursorSubItem) && 
+				else if (((UINT)subItem == _pCurProp->cursorSubItem) && 
 					(((_pCurProp->cursorPos % _pCurProp->bits) != 0) || (_pCurProp->anchorPos >= _pCurProp->cursorPos)))
 				{
 					/* standard cursor position */
@@ -2811,7 +2811,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 			}
 			else
 			{
-				if (((_pCurProp->cursorPos % _pCurProp->bits) == 0) && (subItem == (_pCurProp->cursorSubItem - 1)) &&
+				if (((_pCurProp->cursorPos % _pCurProp->bits) == 0) && ((UINT)subItem == (_pCurProp->cursorSubItem - 1)) &&
 					(_pCurProp->anchorItem < _pCurProp->cursorItem))
 				{
 					/* correction to last element */
@@ -2819,7 +2819,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 					rcCursor.left += size.cx;
 					DrawCursor(hDc, rcCursor);
 				}
-				else if ((subItem == _pCurProp->cursorSubItem) && 
+				else if (((UINT)subItem == _pCurProp->cursorSubItem) && 
 					(((_pCurProp->cursorPos % _pCurProp->bits) != 0) || (_pCurProp->anchorItem > _pCurProp->cursorItem)))
 				{
 					/* standard cursor position */
@@ -2940,7 +2940,7 @@ void HexEdit::SelectDump(INT iItem, INT iCursor)
 		_pCurProp->isSel			= FALSE;
 
 		if ((editMax == _currLength + 1) && (iCursor == 0) &&
-			((_currLength / VIEW_ROW) == ListView_GetItemCount(_hListCtrl)))
+			(LRESULT(_currLength / VIEW_ROW) == ListView_GetItemCount(_hListCtrl)))
 		{
 			INT itemCnt = ListView_GetItemCount(_hListCtrl);
 			ListView_SetItemCountEx(_hListCtrl, itemCnt + 1, 0);
@@ -3165,7 +3165,7 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 	rcCursor.right = rcCursor.left;
 
 	/* draw normal text */
-	if (ListView_GetItemCount(_hListCtrl) == (item + 1)) {
+	if ((DWORD)ListView_GetItemCount(_hListCtrl) == (item + 1)) {
 		diff = _currLength - (item * VIEW_ROW);
 		memset(&text[diff], 0x20, 129 - diff);
 	}
@@ -3356,7 +3356,7 @@ INT HexEdit::CalcCursorPos(LV_HITTESTINFO info)
 	ListView_GetItemText(_hListCtrl, info.iItem, info.iSubItem, text, 128);
 	ListView_GetSubItemRect(_hListCtrl, info.iItem, info.iSubItem, LVIR_BOUNDS, &rc);
 
-	if (info.iSubItem == DUMP_FIELD)
+	if (info.iSubItem == (int)DUMP_FIELD)
 	{
 		/* left offset */
 		rc.left += 6;
@@ -3648,10 +3648,10 @@ void HexEdit::SelectionKeys(WPARAM wParam, LPARAM lParam)
 		}
 		case VK_RIGHT:
 		{
-			if (((_pCurProp->cursorSubItem == _pCurProp->columns) || (_pCurProp->cursorSubItem == DUMP_FIELD)) &&
-				((_pCurProp->cursorPos == VIEW_ROW - 1) || (_pCurProp->cursorPos == VIEW_ROW)) && isMenu)
+			if (((_pCurProp->cursorSubItem == (UINT)_pCurProp->columns) || (_pCurProp->cursorSubItem == DUMP_FIELD)) &&
+				((_pCurProp->cursorPos == UINT(VIEW_ROW - 1)) || (_pCurProp->cursorPos == (UINT)VIEW_ROW)) && isMenu)
 			{
-				if (_pCurProp->cursorPos == VIEW_ROW - 1)
+				if (_pCurProp->cursorPos == UINT(VIEW_ROW - 1))
 				{
 					_pCurProp->cursorSubItem++;
 					_pCurProp->cursorPos++;
@@ -3908,11 +3908,11 @@ void HexEdit::UpdateBookmarks(UINT firstAdd, INT length)
 			/* get old item position */
 			ListView_GetSubItemRect(_hListCtrl, _pCurProp->vBookmarks[i].iItem, 0, LVIR_BOUNDS, &rcOld);
 
-			if ((_pCurProp->vBookmarks[i].lAddress == firstAdd) && (length < 0)) {
+			if ((_pCurProp->vBookmarks[i].lAddress == (LONG)firstAdd) && (length < 0)) {
 				/* remove bookmark if is in a delete section */
 				_pCurProp->vBookmarks.erase(_pCurProp->vBookmarks.begin() + i);
 				i--;
-			} else if ((UINT)_pCurProp->vBookmarks[i].lAddress > firstAdd) {
+			} else if (_pCurProp->vBookmarks[i].lAddress > (LONG)firstAdd) {
 				/* calculate new addresses of bookmarks behind the first address */
 				_pCurProp->vBookmarks[i].lAddress += length;
 				_pCurProp->vBookmarks[i].iItem = _pCurProp->vBookmarks[i].lAddress / VIEW_ROW;
@@ -4111,7 +4111,7 @@ void HexEdit::PasteBookmarkLines(void)
 	}
 	else
 	{
-		if (g_clipboard.stride != VIEW_ROW)
+		if (g_clipboard.stride != (UINT)VIEW_ROW)
 		{
 			if (NLMessageBox(_hInst, _hParent, _T("MsgBox SameWidth"), MB_OK|MB_ICONERROR) == FALSE)
 				MessageBox(_hSelf, _T("Clipboard info has not the same width!"), _T("Hex-Editor Error"), MB_OK|MB_ICONERROR);
