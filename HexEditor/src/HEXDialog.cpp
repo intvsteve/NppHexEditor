@@ -81,7 +81,7 @@ BOOL CALLBACK HexEdit::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARA
 			_hListCtrl	= ::GetDlgItem(_hSelf, IDC_HEX_LIST);
 			UpdateFont();
 
-			/* intial subclassing for key mapping */
+			/* initial subclassing for key mapping */
 			::SetWindowLongPtr(_hListCtrl, GWL_USERDATA, (LONG)(void *)this);
 			_hDefaultListProc = (WNDPROC)(void *)(::SetWindowLongPtr(_hListCtrl, GWL_WNDPROC, (LONG)(void *)wndListProc));
 			ListView_SetExtendedListViewStyleEx(_hListCtrl, LVS_EX_ONECLICKACTIVATE, LVS_EX_ONECLICKACTIVATE);
@@ -938,7 +938,7 @@ void HexEdit::doDialog(BOOL toggle)
 		UpdateHeader(_pCurProp->isVisible);
 	}
 
-	/* set window position and display informations */
+	/* set window position and display information */
 	SetFont();
 	MoveView();
 
@@ -1191,7 +1191,7 @@ void HexEdit::Copy(void)
 				break;
 		}
 
-		/* convert to hex if usefull */
+		/* convert to hex if useful */
 		if (clipboard.text != NULL)
 		{
 			if (_pCurProp->editType == HEX_EDIT_HEX)
@@ -1212,7 +1212,7 @@ void HexEdit::Copy(void)
 			delete [] g_clipboard.text;
 		}
 
-		/* destory scintilla handle */
+		/* destroy scintilla handle */
 		CleanScintillaBuf(hSciTgt);
 		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
 
@@ -1297,7 +1297,7 @@ void HexEdit::Cut(void)
 								if (E_OK != replaceLittleToBig(_hParentHandle, NULL, 0, posBeg, clipboard.stride, 0))
 								{
 									LITTLE_DELETE_ERROR;
-									/* destory scintilla handle */
+									/* destroy scintilla handle */
 									CleanScintillaBuf(hSciTgt);
 									::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
 									return;
@@ -1338,7 +1338,7 @@ void HexEdit::Cut(void)
 						if (E_OK != replaceLittleToBig(_hParentHandle, NULL, 0, posBeg, clipboard.length, 0))
 						{
 							LITTLE_DELETE_ERROR;
-							/* destory scintilla handle */
+							/* destroy scintilla handle */
 							CleanScintillaBuf(hSciTgt);
 							::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
 							return;
@@ -1355,11 +1355,11 @@ void HexEdit::Cut(void)
 				break;
 		}
 		
-		/* destory scintilla handle */
+		/* destroy scintilla handle */
 		CleanScintillaBuf(hSciTgt);
 		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
 
-		/* convert to hex if usefull */
+		/* convert to hex if useful */
 		if (clipboard.text != NULL)
 		{
 			if (_pCurProp->editType == HEX_EDIT_HEX)
@@ -1409,7 +1409,7 @@ void HexEdit::Paste(void)
 		UINT posFind = ScintillaMsg(hSciTgt, SCI_SEARCHINTARGET, 14, (LPARAM)"^[0-9a-fA-F]+ ");
 		if (posFind == 0)
 		{
-			/* if test again and extract informations */
+			/* if test again and extract information */
 			UINT	lineCnt		= ScintillaMsg(hSciTgt, SCI_GETLINECOUNT);
 			UINT	charPerLine	= ScintillaMsg(hSciTgt, SCI_LINELENGTH, 0);
 			LPSTR	buffer		= (LPSTR)new CHAR[charPerLine+1];
@@ -1601,7 +1601,7 @@ void HexEdit::Paste(void)
 			::CloseClipboard();
 		}
 
-		/* destory scintilla handle */
+		/* destroy scintilla handle */
 		CleanScintillaBuf(hSciTgt);
 		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
 	}
@@ -1693,7 +1693,7 @@ void HexEdit::Paste(void)
 			default:
 				break;
 		}
-		/* destory scintilla handle */
+		/* destroy scintilla handle */
 		CleanScintillaBuf(hSciTgt);
 		::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
 
@@ -1838,7 +1838,7 @@ void HexEdit::ReadArrayToList(LPSTR text, INT iItem, INT iSubItem)
 void HexEdit::AddressConvert(LPSTR text, INT length)
 {
 	CHAR temp[65];
-    
+
 	memcpy(temp, text, length);
 
 	if (_pCurProp->isLittle == TRUE)
@@ -2384,7 +2384,7 @@ BOOL HexEdit::OnKeyDownItem(WPARAM wParam, LPARAM lParam)
 	bool	isShift = ((0x80 & ::GetKeyState(VK_SHIFT)) == 0x80);
 	bool	isCtrl	= ((0x80 & ::GetKeyState(VK_CONTROL)) == 0x80);
 
-	/* test if box should be switched into lines or culumns */
+	/* test if box should be switched into lines or columns */
 	switch (wParam)
 	{
 		case VK_UP:
@@ -2602,7 +2602,7 @@ void HexEdit::DrawItemText(HDC hDc, DWORD item, INT subItem)
 	TCHAR		text[65];
 	RECT		rcCursor;
 
-	/* get list informations */
+	/* get list information */
 	ListView_GetItemText(_hListCtrl, item, subItem, text, 65);
 	ListView_GetSubItemRect(_hListCtrl, item, subItem, LVIR_BOUNDS, &rc);
 
@@ -2861,7 +2861,7 @@ void HexEdit::DrawPartOfItemText(HDC hDc, RECT rc, RECT rcText, LPTSTR text, UIN
 			break;
 	}
 
-	/* calculate text witdth and background width */
+	/* calculate text width and background width */
 	switch (sel)
 	{
 		case HEX_ITEM_FIRST:
@@ -2992,7 +2992,7 @@ BOOL HexEdit::OnKeyDownDump(WPARAM wParam, LPARAM lParam)
 {
 	bool	isShift = ((0x80 & ::GetKeyState(VK_SHIFT)) == 0x80);
 
-	/* test if box should be switched into lines or culumns */
+	/* test if box should be switched into lines or columns */
 	switch (wParam)
 	{
 		case VK_UP:
@@ -3160,7 +3160,7 @@ void HexEdit::DrawDumpText(HDC hDc, DWORD item, INT subItem)
 	SIZE		size		= {0};
 	UINT		diff		= VIEW_ROW;
 
-	/* get list informations */
+	/* get list information */
 	ListView_GetItemText(_hListCtrl, item, subItem, text, 129);
 	ListView_GetSubItemRect(_hListCtrl, item, subItem, LVIR_BOUNDS, &rc);
 
@@ -3312,7 +3312,7 @@ void HexEdit::DrawPartOfDumpText(HDC hDc, RECT rc, LPTSTR text, UINT beg, UINT l
 			break;
 	}
 
-	/* calculate text witdth */
+	/* calculate text width */
 	rc.right = rc.left;
 	::GetTextExtentPoint(hDc, text, beg, &size);
 	rc.left += size.cx;
@@ -3357,7 +3357,7 @@ INT HexEdit::CalcCursorPos(LV_HITTESTINFO info)
 	/* for zooming */
 	SelectObject(hDc, _hFont);
 
-	/* get item informations */
+	/* get item information */
 	ListView_GetItemText(_hListCtrl, info.iItem, info.iSubItem, text, 128);
 	ListView_GetSubItemRect(_hListCtrl, info.iItem, info.iSubItem, LVIR_BOUNDS, &rc);
 
@@ -3758,7 +3758,7 @@ void HexEdit::SetSelection(UINT posBegin, UINT posEnd, eSel selection, BOOL isEN
 			_pCurProp->cursorPos	= (posEnd % _pCurProp->bits) * FACTOR;
 		}
 
-		/* correction for corsor view */
+		/* correction for cursor view */
 		if ((_pCurProp->cursorPos == 0) && (isEND == TRUE)) {
 			_pCurProp->cursorSubItem = DUMP_FIELD;
 			_pCurProp->cursorPos = VIEW_ROW;
@@ -3874,7 +3874,7 @@ void HexEdit::ToggleBookmark(UINT iItem)
 			isChanged = TRUE;
 		}
 		else if (_pCurProp->vBookmarks[i].iItem > iItem) {
-			/* if bookmark dosn't exist on this position attach it and sort list */
+			/* if bookmark doesn't exist on this position attach it and sort list */
 			tBkMk	bm = {iItem * VIEW_ROW, iItem};
 			_pCurProp->vBookmarks.push_back(bm);
 			QuickSortRecursive(0, (INT)_pCurProp->vBookmarks.size()-1);
@@ -3925,7 +3925,7 @@ void HexEdit::UpdateBookmarks(UINT firstAdd, INT length)
 				addressTest = _pCurProp->vBookmarks[i].lAddress;
 				iItemTest	= _pCurProp->vBookmarks[i].iItem;
 
-				/* if some data was deleted and the changed item matches with the privious one delete it */
+				/* if some data was deleted and the changed item matches with the previous one delete it */
 				if ((i != 0) && (_pCurProp->vBookmarks[i].lAddress == _pCurProp->vBookmarks[i-1].lAddress)) {
 					_pCurProp->vBookmarks.erase(&_pCurProp->vBookmarks[i]);
 					i--;
@@ -3999,11 +3999,11 @@ void HexEdit::CutBookmarkLines(void)
 		::MessageBox(_hParent, _T("Couldn't create memory."), _T("Hex-Editor"), MB_OK | MB_ICONERROR);
 	}
 
-	/* destory scintilla handle */
+	/* destroy scintilla handle */
 	CleanScintillaBuf(hSciTgt);
 	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
 
-	/* convert to hex if usefull */
+	/* convert to hex if useful */
 	if (clipboard.text != NULL)
 	{
 		if (_pCurProp->editType == HEX_EDIT_HEX)
@@ -4071,11 +4071,11 @@ void HexEdit::CopyBookmarkLines(void)
 		::MessageBox(_hParent, _T("Couldn't create memory."), _T("Hex-Editor"), MB_OK | MB_ICONERROR);
 	}
 
-	/* destory scintilla handle */
+	/* destroy scintilla handle */
 	CleanScintillaBuf(hSciTgt);
 	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
 
-	/* convert to hex if usefull */
+	/* convert to hex if useful */
 	if (clipboard.text != NULL)
 	{
 		if (_pCurProp->editType == HEX_EDIT_HEX)
@@ -4148,7 +4148,7 @@ void HexEdit::PasteBookmarkLines(void)
 		UpdateBookmarks(posBeg, length - VIEW_ROW);
 	}
 
-	/* destory scintilla handle */
+	/* destroy scintilla handle */
 	CleanScintillaBuf(hSciTgt);
 	::SendMessage(_hParent, NPPM_DESTROYSCINTILLAHANDLE, 0, (LPARAM)hSciTgt);
 
