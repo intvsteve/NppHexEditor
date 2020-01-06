@@ -403,8 +403,8 @@ BOOL OptionDlg::GetParams(void)
 
 	if (bRet == TRUE) {
 		_pProp->hexProp.addWidth	= add;
-		_pProp->hexProp.columns		= col;
-		_pProp->hexProp.bits		= bits;
+		_pProp->hexProp.columns		= static_cast<SHORT>(col);
+		_pProp->hexProp.bits		= static_cast<SHORT>(bits);
 		
 		/* get endian */
 		if (::SendDlgItemMessage(_hSelf, IDC_RADIO_BIG, BM_GETCHECK, 0, 0) == BST_CHECKED)

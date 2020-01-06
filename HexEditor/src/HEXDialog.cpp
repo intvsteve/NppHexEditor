@@ -2076,7 +2076,7 @@ void HexEdit::TrackMenu(POINT pt)
 			UINT	val = dlg.doDialogColumn(_pCurProp->columns);
 			if ((val > 0) && (val <= (128 / (UINT)_pCurProp->bits)))
 			{
-				_pCurProp->columns = val;
+				_pCurProp->columns = static_cast<SHORT>(val);
 			}
 			else
 			{

@@ -381,8 +381,8 @@ void loadSettings(void)
 	}
 
 	prop.hexProp.addWidth		= ::GetPrivateProfileInt(dlgEditor, addWidth, 8, iniFilePath);
-	prop.hexProp.columns		= ::GetPrivateProfileInt(dlgEditor, columns, 16, iniFilePath);
-	prop.hexProp.bits			= ::GetPrivateProfileInt(dlgEditor, bits, HEX_BYTE, iniFilePath);
+	prop.hexProp.columns		= static_cast<SHORT>(::GetPrivateProfileInt(dlgEditor, columns, 16, iniFilePath));
+	prop.hexProp.bits			= static_cast<SHORT>(::GetPrivateProfileInt(dlgEditor, bits, HEX_BYTE, iniFilePath));
 	prop.hexProp.isBin			= ::GetPrivateProfileInt(dlgEditor, bin, FALSE, iniFilePath);
 	prop.hexProp.isLittle		= ::GetPrivateProfileInt(dlgEditor, little, FALSE, iniFilePath);
 	::GetPrivateProfileString(dlgEditor, extensions, _T(""), prop.autoProp.szExtensions, MAX_PATH, iniFilePath);
