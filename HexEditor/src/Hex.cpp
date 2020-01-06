@@ -420,8 +420,6 @@ void saveSetting(const TCHAR *settingName, int settingValue)
  */
 void saveSettings(void)
 {
-	TCHAR	temp[64];
-
 	saveSetting(addWidth, prop.hexProp.addWidth);
 	saveSetting(columns, prop.hexProp.columns);
 	saveSetting(bits, prop.hexProp.bits);
