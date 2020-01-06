@@ -62,7 +62,6 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>C:/Programme/Notepad++/Plugins/HexEditor.dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)HexEditor.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
@@ -88,7 +87,6 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>shlwapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>C:/Programme/Notepad++/Plugins/HexEditor.dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
       <MapFileName>C:\Projects\NppPlugins\HexEditor\map\HexEditor.map</MapFileName>
