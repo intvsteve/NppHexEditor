@@ -18,7 +18,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 */
 
 #include "ToolTip.h"
-#include "SysMsg.h"
+#include "Common.h"
 
 
 
@@ -35,10 +35,9 @@ void ToolTip::init(HINSTANCE hInst, HWND hParent)
 		   0, 0, 0, 0, NULL, NULL, NULL, NULL );
 		if (!_hSelf)
 		{
-			systemMessage(_T("System Err"));
-			throw int(6969);
+			throw std::runtime_error("ToolTip::init : CreateWindowEx() function returned null");
 		}
-    
+
 		::SetWindowLongPtr(_hSelf, GWL_USERDATA, reinterpret_cast<LONG>(this));
 		_defaultProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(_hSelf, GWL_WNDPROC, reinterpret_cast<LONG>(staticWinProc)));
 	}

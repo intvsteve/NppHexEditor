@@ -34,10 +34,9 @@ UINT ColumnDlg::doDialogAddWidth(UINT width)
 }
 
 
-BOOL CALLBACK ColumnDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK ColumnDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam)
 {
 	TCHAR	text[16];
-	UNREFERENCED_PARAMETER(hwnd);
 	UNREFERENCED_PARAMETER(lParam);
 
 	switch (Message) 

@@ -20,6 +20,7 @@
 #define HEX_H
 
 #include "Scintilla.h"
+#include "menuCmdID.h"
 #include "Notepad_plus_rc.h"
 #include "PluginInterface.h"
 #include "NativeLang_def.h"

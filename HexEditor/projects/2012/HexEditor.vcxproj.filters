@@ -75,14 +75,14 @@
     <ClCompile Include="..\..\..\Common\Ccpp\StaticDialog.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\Ccpp\SysMsg.cpp">
-      <Filter>Source Files\Common</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Common\Ccpp\stdafx.cpp">
       <Filter>Source Files\Common</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\NativeLang\src\NativeLang_def.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Common\Ccpp\Common.cpp">
+      <Filter>Source Files\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -161,9 +161,6 @@
     <ClInclude Include="..\..\..\Common\Ccpp\StaticDialog.h">
       <Filter>Header Files\Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Common\Ccpp\SysMsg.h">
-      <Filter>Header Files\Common</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Common\Ccpp\Window.h">
       <Filter>Header Files\Common</Filter>
     </ClInclude>
@@ -172,6 +169,15 @@
     </ClInclude>
     <ClInclude Include="..\..\..\NativeLang\src\NativeLang_def.h">
       <Filter>Header Files\if_def_files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Ccpp\Sci_Position.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Common\Ccpp\Common.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Utf8.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

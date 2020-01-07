@@ -69,9 +69,8 @@ void PatternDlg::doDialog(HWND hHexEdit)
 }
 
 
-BOOL CALLBACK PatternDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK PatternDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(hwnd);
 	UNREFERENCED_PARAMETER(lParam);
 	switch (Message) 
 	{

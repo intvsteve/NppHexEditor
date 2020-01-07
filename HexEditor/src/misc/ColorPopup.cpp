@@ -19,7 +19,7 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 #include "ColorPopup.h"
 #include "NativeLang_def.h"
-#include "SysMsg.h"
+#include "Common.h"
 #include <tchar.h>
 
 DWORD colorItems[] = {
@@ -39,8 +39,7 @@ void ColorPopup::create(int dialogID)
 	
 	if (!_hSelf)
 	{
-		systemMessage(_T("ColorPopup"));
-		throw int(696);
+		throw std::runtime_error("ColorPopup::create : CreateDialogParam() function returned null");
 	}
 	Window::getClientRect(_rc);
 	display();
@@ -79,7 +78,7 @@ BOOL CALLBACK ColorPopup::dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM
 	}
 }
 
-BOOL CALLBACK ColorPopup::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK ColorPopup::run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 
 	switch (message)
