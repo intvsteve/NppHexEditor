@@ -38,9 +38,8 @@ void GotoDlg::doDialog(HWND hHexEdit)
 }
 
 
-BOOL CALLBACK GotoDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK GotoDlg::run_dlgProc(UINT Message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(hwnd);
 	UNREFERENCED_PARAMETER(lParam);
 	switch (Message) 
 	{

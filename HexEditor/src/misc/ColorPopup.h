@@ -53,6 +53,9 @@ public :
 	};
     COLORREF getSelColor(){return _color;};
 
+protected:
+	virtual INT_PTR CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
+
 private :
 	HWND		_hNpp;
 	RECT		_rc;
@@ -60,7 +63,6 @@ private :
 	bool		isColorChooserLaunched;
 
 	static BOOL CALLBACK dlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-	BOOL CALLBACK run_dlgProc(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
 #endif //COLOR_POPUP_H
