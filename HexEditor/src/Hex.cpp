@@ -43,7 +43,7 @@ INT				nbFunc	= 9;
 /* for subclassing */
 WNDPROC	wndProcNotepad = NULL;
 
-/* informations for notepad */
+/* information for notepad */
 CONST TCHAR  PLUGIN_NAME[] = _T("HEX-Editor");
 
 /* current used file */
@@ -88,6 +88,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
                        DWORD  reasonForCall, 
                        LPVOID lpReserved )
 {
+	UNREFERENCED_PARAMETER(lpReserved);
 	g_hModule = hModule;
 
     switch (reasonForCall)
@@ -106,13 +107,13 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 			funcItem[8]._pFunc = openHelpDlg;
 			
 			/* Fill menu names */
-			_tcscpy(funcItem[0]._itemName, _T("View in &HEX"));
-			_tcscpy(funcItem[1]._itemName, _T("&Compare HEX"));
-			_tcscpy(funcItem[2]._itemName, _T("Clear Compare &Result"));
-			_tcscpy(funcItem[4]._itemName, _T("&Insert Columns..."));
-			_tcscpy(funcItem[5]._itemName, _T("&Pattern Replace..."));
-			_tcscpy(funcItem[7]._itemName, _T("&Options..."));
-			_tcscpy(funcItem[8]._itemName, _T("&Help..."));
+			_tcscpy_s(funcItem[0]._itemName, sizeof(funcItem[0]._itemName), _T("View in &HEX"));
+			_tcscpy_s(funcItem[1]._itemName, sizeof(funcItem[1]._itemName), _T("&Compare HEX"));
+			_tcscpy_s(funcItem[2]._itemName, sizeof(funcItem[2]._itemName), _T("Clear Compare &Result"));
+			_tcscpy_s(funcItem[4]._itemName, sizeof(funcItem[4]._itemName), _T("&Insert Columns..."));
+			_tcscpy_s(funcItem[5]._itemName, sizeof(funcItem[5]._itemName), _T("&Pattern Replace..."));
+			_tcscpy_s(funcItem[7]._itemName, sizeof(funcItem[7]._itemName), _T("&Options..."));
+			_tcscpy_s(funcItem[8]._itemName, sizeof(funcItem[8]._itemName), _T("&Help..."));
 
 			/* Set shortcuts */
 			funcItem[0]._pShKey = new ShortcutKey;
@@ -150,7 +151,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 			if (g_TBHex.hToolbarIcon)
 				::DestroyIcon(g_TBHex.hToolbarIcon);
 
-			/* Remove subclaasing */
+			/* Remove subclassing */
 			SetWindowLongPtr(nppData._nppHandle, GWL_WNDPROC, (LONG)wndProcNotepad);
 			break;
 		}
@@ -224,7 +225,6 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
 				{
 					tHexProp	hexProp1	= hexEdit1.GetHexProp();
 					tHexProp	hexProp2	= hexEdit2.GetHexProp();
-					INT			length		= notifyCode->length;
 
 					if ((hexProp1.szFileName != NULL) && (hexProp2.szFileName != NULL) &&
 						(_tcscmp(hexProp1.szFileName, hexProp2.szFileName) == 0))
@@ -299,6 +299,8 @@ extern "C" __declspec(dllexport) void beNotified(SCNotification *notifyCode)
  */
 extern "C" __declspec(dllexport) LRESULT messageProc(UINT Message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
 	if (Message == WM_CREATE)
 	{
 		setMenu();
@@ -343,13 +345,13 @@ void loadSettings(void)
 
 		for (size_t i = vPaths.size()-1; i >= 0; i--)
 		{
-			_tcscpy(configPath, vPaths[i].c_str());
+			_tcscpy_s(configPath, sizeof(configPath), vPaths[i].c_str());
 			::CreateDirectory(configPath, NULL);
 		}
 	}
 
 	/* init compare file path */
-	_tcscpy(cmparePath, configPath);
+	_tcscpy_s(cmparePath, sizeof(cmparePath), configPath);
 	*_tcsrchr(cmparePath, '\\') = NULL;
 	::PathAppend(cmparePath, COMPARE_PATH);
 	if (::PathFileExists(cmparePath) == FALSE)
@@ -358,13 +360,13 @@ void loadSettings(void)
 	}
 
 	/* init INI file path */
-	_tcscpy(iniFilePath, configPath);
-	_tcscat(iniFilePath, HEXEDIT_INI);
+	_tcscpy_s(iniFilePath, sizeof(iniFilePath), configPath);
+	_tcscat_s(iniFilePath, sizeof(iniFilePath), HEXEDIT_INI);
 	if (PathFileExists(iniFilePath) == FALSE)
 	{
 		HANDLE	hFile			= NULL;
 #ifdef UNICODE
-		CHAR	szBOM[]			= {0xFF, 0xFE};
+		CHAR	szBOM[]			= {0xFFu, 0xFEu};
 		DWORD	dwByteWritten	= 0;
 #endif
 			
@@ -379,8 +381,8 @@ void loadSettings(void)
 	}
 
 	prop.hexProp.addWidth		= ::GetPrivateProfileInt(dlgEditor, addWidth, 8, iniFilePath);
-	prop.hexProp.columns		= ::GetPrivateProfileInt(dlgEditor, columns, 16, iniFilePath);
-	prop.hexProp.bits			= ::GetPrivateProfileInt(dlgEditor, bits, HEX_BYTE, iniFilePath);
+	prop.hexProp.columns		= static_cast<SHORT>(::GetPrivateProfileInt(dlgEditor, columns, 16, iniFilePath));
+	prop.hexProp.bits			= static_cast<SHORT>(::GetPrivateProfileInt(dlgEditor, bits, HEX_BYTE, iniFilePath));
 	prop.hexProp.isBin			= ::GetPrivateProfileInt(dlgEditor, bin, FALSE, iniFilePath);
 	prop.hexProp.isLittle		= ::GetPrivateProfileInt(dlgEditor, little, FALSE, iniFilePath);
 	::GetPrivateProfileString(dlgEditor, extensions, _T(""), prop.autoProp.szExtensions, MAX_PATH, iniFilePath);
@@ -403,6 +405,13 @@ void loadSettings(void)
 	prop.fontProp.isFocusRect	= ::GetPrivateProfileInt(dlgEditor, focusRect, FALSE, iniFilePath);
 }
 
+void saveSetting(const TCHAR *settingName, int settingValue)
+{
+	TCHAR	temp[64];
+	_itot_s(settingValue, temp, sizeof(temp), 10);
+	::WritePrivateProfileString(dlgEditor, settingName, temp, iniFilePath);
+}
+
 /***
  *	saveSettings()
  *
@@ -410,31 +419,29 @@ void loadSettings(void)
  */
 void saveSettings(void)
 {
-	TCHAR	temp[64];
-
-	::WritePrivateProfileString(dlgEditor, addWidth, _itot(prop.hexProp.addWidth, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, columns, _itot(prop.hexProp.columns, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, bits, _itot(prop.hexProp.bits, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, bin, _itot(prop.hexProp.isBin, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, little, _itot(prop.hexProp.isLittle, temp, 10), iniFilePath);
+	saveSetting(addWidth, prop.hexProp.addWidth);
+	saveSetting(columns, prop.hexProp.columns);
+	saveSetting(bits, prop.hexProp.bits);
+	saveSetting(bin, prop.hexProp.isBin);
+	saveSetting(little, prop.hexProp.isLittle);
 	::WritePrivateProfileString(dlgEditor, extensions, prop.autoProp.szExtensions, iniFilePath);
 	::WritePrivateProfileString(dlgEditor, percent, prop.autoProp.szPercent, iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbRegTxt, _itot(prop.colorProp.rgbRegTxt, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbRegBk, _itot(prop.colorProp.rgbRegBk, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbSelTxt, _itot(prop.colorProp.rgbSelTxt, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbSelBk, _itot(prop.colorProp.rgbSelBk, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbDiffTxt, _itot(prop.colorProp.rgbDiffTxt, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbDiffBk, _itot(prop.colorProp.rgbDiffBk, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbBkMkTxt, _itot(prop.colorProp.rgbBkMkTxt, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbBkMkBk, _itot(prop.colorProp.rgbBkMkBk, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, rgbCurLine, _itot(prop.colorProp.rgbCurLine, temp, 10), iniFilePath);
+	saveSetting(rgbRegTxt, prop.colorProp.rgbRegTxt);
+	saveSetting(rgbRegBk, prop.colorProp.rgbRegBk);
+	saveSetting(rgbSelTxt, prop.colorProp.rgbSelTxt);
+	saveSetting(rgbSelBk, prop.colorProp.rgbSelBk);
+	saveSetting(rgbDiffTxt, prop.colorProp.rgbDiffTxt);
+	saveSetting(rgbDiffBk, prop.colorProp.rgbDiffBk);
+	saveSetting(rgbBkMkTxt, prop.colorProp.rgbBkMkTxt);
+	saveSetting(rgbBkMkBk, prop.colorProp.rgbBkMkBk);
+	saveSetting(rgbCurLine, prop.colorProp.rgbCurLine);
 	::WritePrivateProfileString(dlgEditor, fontname, prop.fontProp.szFontName, iniFilePath);
-	::WritePrivateProfileString(dlgEditor, fontsize, _itot(prop.fontProp.iFontSizeElem, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, capital, _itot(prop.fontProp.isCapital, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, bold, _itot(prop.fontProp.isBold, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, italic, _itot(prop.fontProp.isItalic, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, underline, _itot(prop.fontProp.isUnderline, temp, 10), iniFilePath);
-	::WritePrivateProfileString(dlgEditor, focusRect, _itot(prop.fontProp.isFocusRect, temp, 10), iniFilePath);
+	saveSetting(fontsize, prop.fontProp.iFontSizeElem);
+	saveSetting(capital, prop.fontProp.isCapital);
+	saveSetting(bold, prop.fontProp.isBold);
+	saveSetting(italic, prop.fontProp.isItalic);
+	saveSetting(underline, prop.fontProp.isUnderline);
+	saveSetting(focusRect, prop.fontProp.isFocusRect);
 }
 
 /***
@@ -1000,7 +1007,6 @@ void SystemUpdate(void)
 	OutputDebugString(_T("SystemUpdate\n"));
 
 	UINT		oldSC		= currentSC;
-	UINT		newDocCnt	= 0;
 	TCHAR		pszNewPath[MAX_PATH];
 
 	/* update open files */
@@ -1013,7 +1019,7 @@ void SystemUpdate(void)
 		(_tcscmp(pszNewPath, currentPath) != 0) || (oldSC != currentSC))
 	{
 		/* set new file */
-		_tcscpy(currentPath, pszNewPath);
+		_tcscpy_s(currentPath, sizeof(currentPath), pszNewPath);
 		openDoc1 = newOpenDoc1;
 		openDoc2 = newOpenDoc2;
 
@@ -1138,9 +1144,9 @@ BOOL IsExtensionRegistered(LPCTSTR file)
 
 	if (TEMP != NULL)
 	{
-		_tcscpy(TEMP, prop.autoProp.szExtensions);
-
-		ptr = _tcstok(TEMP, _T(" "));
+		_tcscpy_s(TEMP, MAX_PATH, prop.autoProp.szExtensions);
+		TCHAR *context = NULL;
+		ptr = _tcstok_s(TEMP, _T(" "), &context);
 		while (ptr != NULL)
 		{
 			if (_tcsicmp(&file[_tcslen(file) - _tcslen(ptr)], ptr) == 0)
@@ -1148,7 +1154,7 @@ BOOL IsExtensionRegistered(LPCTSTR file)
 				bRet = TRUE;
 				break;
 			}
-			ptr = _tcstok(NULL, _T(" "));
+			ptr = _tcstok_s(NULL, _T(" "), &context);
 		}
 
 		delete [] TEMP;
@@ -1222,11 +1228,11 @@ void ChangeClipboardDataToHex(tClipboard *clipboard)
 
 	if (clipboard->text != NULL)
 	{
-		strcpy(clipboard->text, hexMask[(UCHAR)text[0]]);
+		strcpy_s(clipboard->text, length, hexMask[(UCHAR)text[0]]);
 		for (INT i = 1; i < length; i++)
 		{
-			strcat(clipboard->text, " ");
-			strcat(clipboard->text, hexMask[(UCHAR)text[i]]);
+			strcat_s(clipboard->text, length, " ");
+			strcat_s(clipboard->text, length, hexMask[(UCHAR)text[i]]);
 		}
 		clipboard->text[clipboard->length] = 0;
 	}
@@ -1288,7 +1294,7 @@ BOOL LittleEndianChange(HWND hTarget, HWND hSource, LPINT offset, LPINT length)
 				UINT offset = (lenCpy) % hexProp.bits;
 				UINT max	= (lenCpy) / hexProp.bits + 1;
 
-				for (i = 1; i <= max; i++)
+				for (UINT i = 1; i <= max; i++)
 				{
 					if (i == max)
 					{
@@ -1422,8 +1428,6 @@ void DoCompare(void)
 {
 	TCHAR		szFile[MAX_PATH];
 	BOOL		doMatch		= TRUE;
-	LPSTR		compare1	= NULL;
-	LPSTR		compare2	= NULL;
 	tHexProp	hexProp1	= hexEdit1.GetHexProp();
 	tHexProp	hexProp2	= hexEdit2.GetHexProp();
 	tCmpResult	cmpResult	= {0};
@@ -1439,15 +1443,15 @@ void DoCompare(void)
 	}
 
 	/* create file for compare results */
-	_tcscpy(cmpResult.szFileName, cmparePath);
-	_tcscpy(szFile, ::PathFindFileName(hexEdit1.GetHexProp().szFileName));
+	_tcscpy_s(cmpResult.szFileName, sizeof(cmpResult.szFileName), cmparePath);
+	_tcscpy_s(szFile, sizeof(szFile), ::PathFindFileName(hexEdit1.GetHexProp().szFileName));
 	::PathRemoveExtension(szFile);
 	::PathAppend(cmpResult.szFileName, szFile);
-	_tcscat(cmpResult.szFileName, _T("_"));
-	_tcscpy(szFile, ::PathFindFileName(hexEdit2.GetHexProp().szFileName));
+	_tcscat_s(cmpResult.szFileName, sizeof(cmpResult.szFileName), _T("_"));
+	_tcscpy_s(szFile, sizeof(szFile), ::PathFindFileName(hexEdit2.GetHexProp().szFileName));
 	::PathRemoveExtension(szFile);
-	_tcscat(cmpResult.szFileName, szFile);
-	_tcscat(cmpResult.szFileName, _T(".cmp"));
+	_tcscat_s(cmpResult.szFileName, sizeof(cmpResult.szFileName), szFile);
+	_tcscat_s(cmpResult.szFileName, sizeof(cmpResult.szFileName), _T(".cmp"));
 	cmpResult.hFile = ::CreateFile(cmpResult.szFileName, 
 		GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, 
 		NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
@@ -1520,7 +1524,7 @@ void DoCompare(void)
 			DWORD	hasWritten	= 0;
 			CHAR    val		    = TRUE;
 
-            for (UINT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
+            for (INT i = (minLength / hexProp1.bits); i < (maxLength / hexProp1.bits); i++) {
 			    ::WriteFile(cmpResult.hFile, &val, sizeof(val), &hasWritten, NULL);
             }
 

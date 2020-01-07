@@ -24,7 +24,6 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 
 typedef HRESULT (WINAPI * ETDTProc) (HWND, DWORD);
-#define CB_SETMINVISIBLE 0x1701
 
 
 
@@ -69,6 +68,7 @@ void FindReplaceDlg::display(bool toShow)
 
 BOOL CALLBACK FindReplaceDlg::run_dlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(hwnd);
 	switch (Message) 
 	{
         case WM_INITDIALOG :
@@ -191,12 +191,12 @@ void FindReplaceDlg::initDialog(void)
 
 	item.mask		= TCIF_TEXT;
 	if (NLGetText(_hInst, _hParent, _T("Find"), txtTab, sizeof(txtTab) / sizeof(TCHAR)) == FALSE)
-		_tcscpy(txtTab, _T("Find"));
+		_tcscpy_s(txtTab, sizeof(txtTab), _T("Find"));
 	item.pszText	= txtTab;
 	item.cchTextMax	= (int)_tcslen(txtTab);
 	::SendDlgItemMessage(_hSelf, IDC_SWITCH, TCM_INSERTITEM, 0, (LPARAM)&item);
 	if (NLGetText(_hInst, _hParent, _T("Replace"), txtTab, sizeof(txtTab) / sizeof(TCHAR)) == FALSE)
-		_tcscpy(txtTab, _T("Replace"));
+		_tcscpy_s(txtTab, sizeof(txtTab), _T("Replace"));
 	item.pszText	= txtTab;
 	item.cchTextMax	= (int)_tcslen(txtTab);
 	::SendDlgItemMessage(_hSelf, IDC_SWITCH, TCM_INSERTITEM, 1, (LPARAM)&item);
@@ -255,7 +255,7 @@ void FindReplaceDlg::updateDialog(void)
 	if (_findReplace == TRUE)
 	{
 		if (NLGetText(_hInst, _hParent, _T("Replace"), txtCaption, sizeof(txtCaption) / sizeof(TCHAR)) == FALSE)
-			_tcscpy(txtCaption, _T("Replace"));
+			_tcscpy_s(txtCaption, sizeof(txtCaption), _T("Replace"));
 		::SetWindowText(_hSelf, txtCaption);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_COUNT), SW_HIDE);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_REPLACE), SW_SHOW);
@@ -268,7 +268,7 @@ void FindReplaceDlg::updateDialog(void)
 	else
 	{
 		if (NLGetText(_hInst, _hParent, _T("Find"), txtCaption, sizeof(txtCaption) / sizeof(TCHAR)) == FALSE)
-			_tcscpy(txtCaption, _T("Find"));
+			_tcscpy_s(txtCaption, sizeof(txtCaption), _T("Find"));
 		::SetWindowText(_hSelf, txtCaption);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_COUNT), SW_SHOW);
 		::ShowWindow(::GetDlgItem(_hSelf, IDC_REPLACE), SW_HIDE);
@@ -450,7 +450,7 @@ void FindReplaceDlg::onFind(BOOL isVolatile)
 					TCHAR	TEMP[128];
 
 					if (NLGetText(_hInst, _hParent, _T("CantFind"), TEMP, 128)) {
-						_tcscpy(text, TEMP);
+						_tcscpy_s(text, sizeof(text), TEMP);
 						if (NLGetText(_hInst, _hParent, (_findReplace == TRUE)?_T("Replace"):_T("Find"), TEMP, 128)) {
 							::MessageBox(_hParent, text, TEMP, MB_OK);
 						} else {
@@ -486,6 +486,7 @@ void FindReplaceDlg::onReplace(void)
 	INT		posBeg  = 0;
 	INT		posEnd  = 0;
 	eError	isRep	= E_OK;
+	DBG_UNREFERENCED_LOCAL_VARIABLE(lenSrc); // keeping local because it is unclear if ScintillaMsg() has side effects
 
 	_pFindCombo->getText(&_find);
 	_pReplaceCombo->getText(&_replace);
@@ -515,7 +516,7 @@ void FindReplaceDlg::onReplace(void)
 
 			/* make difference between match case modes */
     		if (((_isMatchCase == TRUE) && (memcmp(text, _find.text, lenStr) == 0)) ||
-				((_isMatchCase == FALSE) && (stricmp(text, _find.text) == 0)))
+				((_isMatchCase == FALSE) && (_stricmp(text, _find.text) == 0)))
     		{
     			ScintillaMsg(_hSCI, SCI_TARGETFROMSELECTION);
     			ScintillaMsg(_hSCI, SCI_REPLACETARGET, _replace.length, (LPARAM)&_replace.text);
@@ -642,7 +643,7 @@ void FindReplaceDlg::processAll(UINT process)
 	if (cnt == 0)
 	{
 		if (NLGetText(_hInst, _hParent, _T("CantFind"), TEMP, 128)) {
-			_tcscpy(text, TEMP);
+			_tcscpy_s(text, sizeof(text), TEMP);
 			if (NLGetText(_hInst, _hParent, _T("Find"), TEMP, 128)) {
 				::MessageBox(_hParent, text, TEMP, MB_OK);
 			} else {
@@ -659,9 +660,9 @@ void FindReplaceDlg::processAll(UINT process)
 			case COUNT:
 			{
 				if (NLGetText(_hInst, _hParent, _T("Tokens Found"), TEMP, 128)) {
-					_stprintf(text, TEMP, cnt);
+					_stprintf_s(text, sizeof(text), TEMP, cnt);
 				} else {
-					_stprintf(text, _T("%i tokens are found."), cnt);
+					_stprintf_s(text, sizeof(text), _T("%i tokens are found."), cnt);
 				}
 
 				if (NLGetText(_hInst, _hParent, _T("Count"), TEMP, 128)) {
@@ -680,17 +681,17 @@ void FindReplaceDlg::processAll(UINT process)
 				::SendMessage(_hParentHandle, HEXM_SETPOS, 0, (LPARAM)pos);
 
 				if (NLGetText(_hInst, _hParent, _T("Tokens Replaced"), TEMP, 128)) {
-					_stprintf(text, TEMP, cnt);
+					_stprintf_s(text, sizeof(text), TEMP, cnt);
 				} else {
-					_stprintf(text, _T("%i tokens are replaced.\n"), cnt);
+					_stprintf_s(text, sizeof(text), _T("%i tokens are replaced.\n"), cnt);
 				}
 
 				if (cntError != 0)
 				{
 					if (NLGetText(_hInst, _hParent, _T("Tokens Skipped"), TEMP, 128)) {
-						_stprintf(text, TEMP, text, cntError);
+						_stprintf_s(text, sizeof(text), TEMP, text, cntError);
 					} else {
-						_stprintf(text, _T("%s%i tokens are skipped, because of alignment error.\n"), text, cntError);
+						_stprintf_s(text, sizeof(text), _T("%s%i tokens are skipped, because of alignment error.\n"), text, cntError);
 					}
 				}
 
@@ -773,7 +774,7 @@ void FindReplaceDlg::getSelText(tComboInfo* info)
 	::SendMessage(_hParentHandle, HEXM_GETSEL, (WPARAM)&posBeg, (LPARAM)&posEnd);
 
 	INT	offset	= (INT)(posBeg < posEnd ? posBeg : posEnd);
-	INT	length	= (abs(posEnd-posBeg) > COMBO_STR_MAX ? COMBO_STR_MAX : abs(posEnd-posBeg));
+	INT	length	= (abs(INT(posEnd-posBeg)) > COMBO_STR_MAX ? COMBO_STR_MAX : abs(INT(posEnd-posBeg)));
 	info->length = length;
 
 	if (info->length != 0)

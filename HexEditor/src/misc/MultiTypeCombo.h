@@ -66,12 +66,12 @@ typedef union {
 	struct {
 		tComboInfo	comboInfo;
 		eNppCoding	codePage;
-	};
+	} tCombo;
 	struct {
 		int 		length;
 		char		text[COMBO_STR_MAX];
 		eNppCoding	codePage;
-	};
+	} tNpp;
 } tEncComboInfo;
 
 
