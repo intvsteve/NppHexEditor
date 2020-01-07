@@ -173,6 +173,9 @@
     <ClInclude Include="..\..\..\NativeLang\src\NativeLang_def.h">
       <Filter>Header Files\if_def_files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Common\Ccpp\Sci_Position.h">
+      <Filter>Header Files\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\src\HEXDialog.rc">
