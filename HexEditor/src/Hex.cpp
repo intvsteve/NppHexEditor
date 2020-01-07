@@ -28,7 +28,7 @@
 #include "HelpDialog.h"
 #include "ToolTip.h"
 #include "tables.h"
-#include "SysMsg.h"
+#include "Common.h"
 #include "ModifyMenu.h"
 #include <stdlib.h>
 

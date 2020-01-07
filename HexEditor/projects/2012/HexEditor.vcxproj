@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -99,6 +99,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Common\Ccpp\Common.cpp" />
     <ClCompile Include="..\..\..\NativeLang\src\NativeLang_def.cpp" />
     <ClCompile Include="..\..\src\misc\ColorCombo.cpp" />
     <ClCompile Include="..\..\src\misc\ColorPopup.cpp" />
@@ -120,7 +121,6 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\Common\Ccpp\SysMsg.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
     </ClCompile>
@@ -130,6 +130,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Common\Ccpp\Common.h" />
     <ClInclude Include="..\..\..\Common\Ccpp\Sci_Position.h" />
     <ClInclude Include="..\..\src\misc\ColorCombo.h" />
     <ClInclude Include="..\..\src\misc\ColorPopup.h" />
@@ -157,7 +158,6 @@
     <ClInclude Include="..\..\..\Common\Ccpp\SciSubClassWrp.h" />
     <ClInclude Include="..\..\..\Common\Ccpp\Scintilla.h" />
     <ClInclude Include="..\..\..\Common\Ccpp\StaticDialog.h" />
-    <ClInclude Include="..\..\..\Common\Ccpp\SysMsg.h" />
     <ClInclude Include="..\..\..\Common\Ccpp\Window.h" />
     <ClInclude Include="..\..\..\Common\Ccpp\stdafx.h" />
     <ClInclude Include="..\..\..\NativeLang\src\NativeLang_def.h" />
