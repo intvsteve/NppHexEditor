@@ -67,7 +67,8 @@ std::string getFileContent(const TCHAR *file2read)
 	const size_t blockSize = 1024;
 	char data[blockSize];
 	std::string wholeFileContent = "";
-	FILE *fp = generic_fopen(file2read, TEXT("rb"));
+	FILE *fp = NULL;
+	generic_fopen_s(&fp, file2read, TEXT("rb"));
 
 	size_t lenFile = 0;
 	do
@@ -124,7 +125,8 @@ generic_string relativeFilePathToFullFilePath(const TCHAR *relativeFilePath)
 
 void writeFileContent(const TCHAR *file2write, const char *content2write)
 {
-	FILE *f = generic_fopen(file2write, TEXT("w+"));
+	FILE *f = NULL;
+	generic_fopen_s(&f, file2write, TEXT("w+"));
 	fwrite(content2write, sizeof(content2write[0]), strlen(content2write), f);
 	fflush(f);
 	fclose(f);
@@ -133,7 +135,8 @@ void writeFileContent(const TCHAR *file2write, const char *content2write)
 
 void writeLog(const TCHAR *logFileName, const char *log2write)
 {
-	FILE *f = generic_fopen(logFileName, TEXT("a+"));
+	FILE *f = NULL;
+	generic_fopen_s(&f, logFileName, TEXT("a+"));
 	fwrite(log2write, sizeof(log2write[0]), strlen(log2write), f);
 	fputc('\n', f);
 	fflush(f);

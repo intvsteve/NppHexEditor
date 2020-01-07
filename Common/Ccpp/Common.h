@@ -47,7 +47,7 @@ const bool dirDown = false;
 
 #define generic_strtol wcstol
 #define generic_strncpy wcsncpy
-#define generic_stricmp wcsicmp
+#define generic_stricmp _wcsicmp
 #define generic_strncmp wcsncmp
 #define generic_strnicmp wcsnicmp
 #define generic_strncat wcsncat
@@ -61,6 +61,7 @@ const bool dirDown = false;
 #define generic_sprintf swprintf
 #define generic_sscanf swscanf
 #define generic_fopen _wfopen
+#define generic_fopen_s _wfopen_s
 #define generic_fgets fgetws
 #define COPYDATA_FILENAMES COPYDATA_FILENAMESW
 #define NPP_INTERNAL_FUCTION_STR TEXT("Notepad++::InternalFunction")
